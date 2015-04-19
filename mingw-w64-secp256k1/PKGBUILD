@@ -3,12 +3,20 @@
 _realname=secp256k1
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 pkgver=r504.14aacdc
-pkgrel=1
+pkgrel=2
 pkgdesc="Optimized C library for EC operations on curve secp256k1."
 arch=('any')
 url="https://github.com/bitcoin/${_realname}"
 license=('custom')
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" 'git' 'automake' 'autoconf' 'libtool')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  '${MINGW_PACKAGE_PREFIX}-openssl'
+  'git'
+  'automake'
+  'autoconf'
+  'libtool'
+)
+depends=("${MINGW_PACKAGE_PREFIX}-gmp")
 options=('staticlibs' 'strip')
 source=(
   "git+https://github.com/bitcoin/${_realname}.git"
