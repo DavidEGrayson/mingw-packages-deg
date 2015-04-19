@@ -15,6 +15,7 @@ makedepends=(
   'automake'
   'autoconf'
   'libtool'
+  'pkgconfig'
 )
 depends=("${MINGW_PACKAGE_PREFIX}-gmp")
 options=('staticlibs' 'strip')
