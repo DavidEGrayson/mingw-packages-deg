@@ -1,0 +1,59 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=secp256k1
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r504.14aacdc
+pkgrel=1
+pkgdesc="Optimized C library for EC operations on curve secp256k1."
+arch=('any')
+url="https://github.com/bitcoin/${_realname}"
+license=('custom')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc" 'git' 'automake' 'autoconf' 'libtool')
+options=('staticlibs' 'strip')
+source=(
+  "git+https://github.com/bitcoin/${_realname}.git"
+  '01-libtool.patch'
+)
+
+sha256sums=('SKIP'
+            '7b4cec627691501956d36ca93c1400f13a6c1c4b3c83d9450bd6cc99e7c3c266')
+
+pkgver() {
+  cd "${srcdir}/${_realname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/${_realname}"
+
+  # Fixes this error: http://stackoverflow.com/q/17487891/28128
+  patch -p1 -i ../01-libtool.patch
+
+  ./autogen.sh
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}/${_realname}/configure" \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-shared \
+    --enable-static \
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/${_realname}"
+  install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+  libtool --finish "${pkgdir}${MINGW_PREFIX}/lib"
+}
