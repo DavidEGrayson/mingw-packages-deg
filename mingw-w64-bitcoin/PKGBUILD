@@ -1,0 +1,73 @@
+# This does not work yet!
+
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+# TODO: consider making a db4.8 package and using it here so that the
+# wallets opened by this build are portable.
+# Get rid of with-incompatible-bdb option.
+#
+# > configure: WARNING: Found Berkeley DB other than 4.8; wallets
+# > opened by this build will not be portable!
+
+_realname=bitcoin
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.10.0
+pkgrel=1
+pkgdesc='An experimental new digital currency.'
+arch=('any')
+url="https://github.com/bitcoin/${_realname}"
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'git'
+  'automake'
+  'autoconf'
+  'libtool'
+  'pkgconfig'
+  'ca-certificates'
+)
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-qt5"
+  "${MINGW_PACKAGE_PREFIX}-db"
+  "${MINGW_PACKAGE_PREFIX}-boost"
+  "${MINGW_PACKAGE_PREFIX}-secp256k1-git"
+)
+options=('staticlibs' 'strip')
+source=(
+  "https://github.com/bitcoin/bitcoin/archive/v${pkgver}.tar.gz"
+)
+
+sha256sums=(
+  'be57f3b0d64a797873189e45851f3b3510832e14ff18b5f563e1ba8911d145ac'
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  ./autogen.sh
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "${srcdir}/${_realname}-${pkgver}/configure" \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --with-gui=qt5 \
+    --with-libs=no \
+    --with-incompatible-bdb
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  # cd "${srcdir}/${_realname}"
+  # install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+  # libtool --finish "${pkgdir}${MINGW_PREFIX}/lib"
+}
