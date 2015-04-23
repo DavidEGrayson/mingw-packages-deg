@@ -2,7 +2,8 @@
 
 # Maintainer: David Grayson <davidegrayson@gmail.com>
 
-# https://code.msdn.microsoft.com/windowshardware/Windows-8-Driver-Samples-5e1aa62e/file/97069/26/Windows%20Driver%20Kit%20(WDK)%208.1%20Samples.zip
+# An alternative copy of this program can be found at:
+# https://github.com/Microsoft/Windows-driver-samples/tree/master/usb/usbview
 
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
@@ -56,11 +57,11 @@ build() {
   cd "${srcdir}/USBView sample application"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
-  gcc --std=c99 -mwindows \
+  gcc --std=c99 \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
     ../C++/*.c \
-    -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi \
+    -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
     -o usbview.exe
 
 #    -DNO_SHLWAPI_STRFCNS \
