@@ -20,16 +20,16 @@ makedepends=(
 depends=()
 options=('strip')
 source=(
-  "https://code.msdn.microsoft.com/windowshardware/Windows-8-Driver-Samples-5e1aa62e/file/97069/26/Windows%20Driver%20Kit%20(WDK)%208.1%20Samples.zip"
+  "https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039/file/51333/38/USBView%20sample%20application.zip"
 )
 
 sha256sums=(
-  '49f005dfd72fba8d5f9727a9085826c593f282346e3750f10d122da52c0e31f2'
+  'fd07e8b20f9cff7efd8c01bf2b9cc9ac39ba85c76e56287b80d8abf38ec92287'
 )
 
 prepare() {
-  cd "${srcdir}/USBView sample application/C++"
-  s=../../..
+  cd "${srcdir}/C++"
+  s=../..
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
@@ -55,7 +55,7 @@ prepare() {
 }
 
 build() {
-  cd "${srcdir}/USBView sample application"
+  cd "${srcdir}"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
@@ -75,7 +75,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/USBView sample application/"
+  cd "${srcdir}/"
   install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
   cd "build-${MINGW_CHOST}"
   mkdir "${pkgdir}${MINGW_PREFIX}/bin/"
