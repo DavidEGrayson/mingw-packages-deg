@@ -1,0 +1,74 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+# An alternative copy of this program can be found at:
+# https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
+
+_realname=devcon
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.1.20140402
+pkgrel=1
+pkgdesc='Command-line tool that lets you search for and manipulate devices.'
+arch=('any')
+url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  "${MINGW_PACKAGE_PREFIX}-intsafe"
+  'dos2unix'
+  'patch'
+)
+depends=()
+options=('strip')
+source=(
+  "https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c/file/42722/49/Device%20Console%20(DevCon)%20Tool.zip"
+)
+
+sha256sums=(
+  'b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
+)
+
+prepare() {
+  cd "${srcdir}/C++"
+  s=../..
+
+  # mc.exe does not seem to be available in MSYS2, so I had to make
+  # these files using Visual Studio.  They are generated from msg.mc.
+  mv "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
+
+  # Convert all the line endings to Unix right now because the patch
+  # command will end up doing it automatically for any file it
+  # patches, which will make it hard to use "diff -u -r" to prepare
+  # more patches.
+  dos2unix *.cpp *.h *.rc
+
+  # patch -p1 -i "${s}/01-strsafe-after-tchar.patch"
+}
+
+build() {
+  cd "${srcdir}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+
+  windres -I../C++ ../C++/devcon.rc rc.so
+
+  # Optimization level of at least O1 is required to make GCC actually
+  # inline the functions in uvcdesc.h, so they don't require a separate
+  # definition somewhere.  Removing the -O1 option would cause a linker
+  # error.  This is kind of sketchy, but was the easiest way to compile.
+
+  gcc --std=c99 -O1 \
+    ../C++/*.c rc.so \
+    -o devcon.exe
+
+    # -DSTRSAFE_NO_DEPRECATE \
+    # -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
+    # -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
+}
+
+package() {
+  cd "${srcdir}"
+  install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
+  cd "build-${MINGW_CHOST}"
+  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  install -Dm755 devcon.exe "${pkgdir}${MINGW_PREFIX}/bin"
+}
