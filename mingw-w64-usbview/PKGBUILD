@@ -66,7 +66,7 @@ build() {
   # definition somewhere.  Removing the -O1 option would cause a linker
   # error.  This is kind of sketchy, but was the easiest way to compile.
 
-  gcc --std=c99 -O1 \
+  gcc -mwindows --std=c99 -O1 \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
     ../C++/*.c rc.so \
