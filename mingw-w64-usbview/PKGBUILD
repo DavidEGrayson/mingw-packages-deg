@@ -74,10 +74,6 @@ build() {
     -o usbview.exe
 }
 
-check() {
-  echo hi
-}
-
 package() {
   cd "${srcdir}/USBView sample application/"
   install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
