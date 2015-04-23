@@ -51,12 +51,17 @@ prepare() {
   # We exclude the XML stuff because it requires Visual C++ (.NET).
   rm usbschema.hpp xmlhelper.cpp
   cp "${s}/my_xmlhelper.c" .
+
+  # Fix some syntax errors that windres complains about
+  patch -p1 -i "${s}/03-resource-fix.patch"
 }
 
 build() {
   cd "${srcdir}/USBView sample application"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
+
+  windres ../C++/uvcview.rc rc.so
 
   # Optimization level of at least O1 is required to make GCC actually
   # inline the functions in uvcdesc.h, so they don't require a separate
@@ -66,7 +71,7 @@ build() {
   gcc --std=c99 -O1 \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
-    ../C++/*.c \
+    ../C++/*.c rc.so \
     -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
     -o usbview.exe
 
