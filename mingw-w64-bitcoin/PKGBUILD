@@ -52,9 +52,16 @@ build() {
   "${srcdir}/${_realname}-${pkgver}/configure" \
     --prefix=${MINGW_PREFIX} \
     --build=${MINGW_CHOST} \
-    --with-gui=qt5 \
     --with-libs=no \
-    --with-incompatible-bdb
+    --with-gui=qt5 \
+    --with-qt-incdir=${MINGW_PREFIX}/include \
+    --with-incompatible-bdb \
+    --with-boost-system=boost_system-mt \
+    --with-boost-filesystem=boost_filesystem-mt \
+    --with-boost-program-options=boost_program_options-mt \
+    --with-boost-thread=boost_thread-mt \
+    --with-boost-chrono=boost_chrono-mt \
+    --with-boost-unit-test-framework=boost_unit_test_framework-mt \
 
   make
 }
