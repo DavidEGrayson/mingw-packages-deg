@@ -30,6 +30,7 @@ sha256sums=(
 
 prepare() {
   cd "${srcdir}/USBView sample application/C++"
+  s=../../..
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
@@ -38,24 +39,32 @@ prepare() {
   dos2unix *.c *.h *.hpp *.rc
 
   # strsafe.h must be after tchar.h in mingw-w64
-  patch -p1 -i ../../../01-strsafe-after-tchar.patch
+  patch -p1 -i "${s}/01-strsafe-after-tchar.patch"
 
   # mingw-w64's sal.h doesn't include enough annotations:
   # https://msdn.microsoft.com/en-us/library/hh916382.aspx
   # https://msdn.microsoft.com/en-us/library/jj159529.aspx
-  cp ../../../my_sal.h .
-  patch -p1 -i ../../../02-my-sal.patch
+  cp "${s}/my_sal.h" .
+  patch -p1 -i "${s}/02-my-sal.patch"
+
+  # We exclude the XML stuff because it requires Visual C++ (.NET).
+  rm usbschema.hpp xmlhelper.cpp
+  cp "${s}/my_xmlhelper.c" .
 }
 
 build() {
   cd "${srcdir}/USBView sample application"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
-  gcc --std=c99 \
+  gcc --std=c99 -mwindows \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
-    -DNO_SHLWAPI_STRFCNS \
-    -o usbview.exe \
-    ../C++/*.c
+    -DSTRSAFE_NO_DEPRECATE \
+    ../C++/*.c \
+    -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi \
+    -o usbview.exe
+
+#    -DNO_SHLWAPI_STRFCNS \
+
 }
 
 check() {
