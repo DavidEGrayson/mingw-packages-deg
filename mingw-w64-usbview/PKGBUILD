@@ -9,7 +9,7 @@ pkgver=0.1.20140402
 pkgrel=1
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
-url='https://msdn.microsoft.com/en-us/library/windows/hardware/ff560019.aspx'
+url='https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
@@ -75,9 +75,9 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/"
+  cd "${srcdir}"
   install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
   cd "build-${MINGW_CHOST}"
-  mkdir "${pkgdir}${MINGW_PREFIX}/bin/"
-  install -Dm755 usbview.exe "${pkgdir}${MINGW_PREFIX}/bin/"
+  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  install -Dm755 usbview.exe "${pkgdir}${MINGW_PREFIX}/bin"
 }
