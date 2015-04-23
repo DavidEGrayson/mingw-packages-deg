@@ -1,0 +1,23 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=intsafe
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.1.20100601
+pkgrel=1
+pkgdesc="Implementation of Microsoft's intsafe.h header."
+arch=('any')
+url='https://sourceforge.net/p/mingw-w64/feature-requests/33/'
+license=('custom')
+source=(
+  "https://sourceforge.net/p/mingw-w64/feature-requests/_discuss/thread/bd53aa8b/55a6/attachment/Intsafe.7z"
+)
+
+sha256sums=(
+  '7ae91e999b47d1ce31a688a4b89d1382b765f688897be6e5aa7d2eb160c84970'
+)
+
+package() {
+  cd "${srcdir}"
+  mkdir -p "${pkgdir}${MINGW_PREFIX}/include/"
+  install -m644 intsafe*.h "${pkgdir}${MINGW_PREFIX}/include/"
+}

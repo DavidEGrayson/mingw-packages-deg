@@ -1,0 +1,64 @@
+# This does not work yet!
+
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+# https://code.msdn.microsoft.com/windowshardware/Windows-8-Driver-Samples-5e1aa62e/file/97069/26/Windows%20Driver%20Kit%20(WDK)%208.1%20Samples.zip
+
+_realname=usbview
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.0
+pkgrel=1
+pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
+arch=('any')
+url='https://msdn.microsoft.com/en-us/library/windows/hardware/ff560019.aspx'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  "${MINGW_PACKAGE_PREFIX}-intsafe"
+  'dos2unix'
+  'patch'
+)
+depends=()
+options=('strip')
+source=(
+  "https://code.msdn.microsoft.com/windowshardware/Windows-8-Driver-Samples-5e1aa62e/file/97069/26/Windows%20Driver%20Kit%20(WDK)%208.1%20Samples.zip"
+)
+
+sha256sums=(
+  '49f005dfd72fba8d5f9727a9085826c593f282346e3750f10d122da52c0e31f2'
+)
+
+prepare() {
+  cd "${srcdir}/USBView sample application/C++"
+
+  # Convert all the line endings to Unix right now because the patch
+  # command will end up doing it automatically for any file it
+  # patches, which will make it hard to use "diff -u -r" to prepare
+  # more patches.
+  dos2unix *.c *.h *.hpp *.rc
+
+  patch -p1 -i ../../../01-strsafe-after-tchar.patch
+  patch -p1 -i ../../../02-my-sal.patch
+}
+
+build() {
+  cd "${srcdir}/USBView sample application"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+  gcc -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
+    -DNO_SHLWAPI_STRFCNS \
+    -I../C++ \
+    -o usbview.exe \
+    ../C++/devnode.c
+
+    # ../C++/*.c
+}
+
+check() {
+  echo hi
+}
+
+package() {
+  cd "${srcdir}/USBView sample application/"
+  install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
+}
