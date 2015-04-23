@@ -5,7 +5,7 @@
 
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=1.0
+pkgver=0.1.20140402
 pkgrel=1
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
