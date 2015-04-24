@@ -41,6 +41,7 @@ prepare() {
   # more patches.
   dos2unix *.cpp *.h *.rc
 
+  cp "${s}/my_infstr.h" .
   patch -p1 -i "${s}/01-no-infstr.patch"
 
   cp "${s}/my_sal.h" .

@@ -6,7 +6,7 @@ diff -u -r C++/devcon.h C++fix/devcon.h
  #include <setupapi.h>
  #include <regstr.h>
 -#include <infstr.h>
-+//#include <infstr.h>
++#include "my_infstr.h"
  #include <cfgmgr32.h>
  #include <string.h>
  #include <malloc.h>
