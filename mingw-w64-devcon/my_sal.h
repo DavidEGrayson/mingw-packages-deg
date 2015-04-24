@@ -58,3 +58,8 @@
 
 // Don't know where this is documented
 #define _Post_writable_byte_size_(s)
+#define __drv_allocatesMem(s)
+#define __drv_freesMem(s)
+#define __drv_aliasesMem
+#define _Reserved_
+#define _Analysis_assume_(s)
