@@ -61,8 +61,7 @@ build() {
   # error.  This is kind of sketchy, but was the easiest way to compile.
 
   g++ -O1 -municode -Wno-write-strings \
-    -DWIN32_LEAN_AND_MEAN=1 -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 \
-    -DWINNT=1 -DNTDDI_VERSION=0x06010000 -DUNICODE -D_UNICODE \
+    -DWIN32_LEAN_AND_MEAN=1 -DUNICODE -D_UNICODE \
     ../C++/*.cpp rc.so \
     -lsetupapi -lole32 \
     -o devcon.exe
