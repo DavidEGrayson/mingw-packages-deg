@@ -1,0 +1,60 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+# An alternative copy of this program can be found at:
+# https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
+
+_realname=mpack
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.7
+pkgrel=1
+pkgdesc='Pack/unpack messages in MIME or split-uuencode format.'
+arch=('any')
+url='https://sourceforge.net/projects/mpack-win/'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  # 'dos2unix'
+  # 'patch'
+)
+depends=()
+options=('strip')
+source=(
+  "http://downloads.sourceforge.net/project/mpack-win/mpack17-src.zip"
+)
+
+sha256sums=(
+  '6ea5836be6c07a6daa76c404dc047b6f252b8680fb0f71a2cd42e00043056849'
+)
+
+prepare() {
+  cd "${srcdir}/C++"
+  s=../..
+
+  # mc.exe does not seem to be available in MSYS2, so I had to make
+  # these files using Visual Studio.  They are generated from msg.mc.
+  # cp "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
+
+  # Convert all the line endings to Unix right now because the patch
+  # command will end up doing it automatically for any file it
+  # patches, which will make it hard to use "diff -u -r" to prepare
+  # more patches.
+  # dos2unix *.cpp *.h *.rc
+
+  # cp "${s}/my_infstr.h" .
+  # patch -p1 -i "${s}/01-no-infstr.patch"
+}
+
+build() {
+  cd "${srcdir}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+
+  make
+}
+
+package() {
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd "build-${MINGW_CHOST}"
+  install -Dm755 mpack.exe "${pkgdir}${MINGW_PREFIX}/bin/mpack.exe"
+  install -Dm755 munpack.exe "${pkgdir}${MINGW_PREFIX}/bin/mpack.exe"
+}
