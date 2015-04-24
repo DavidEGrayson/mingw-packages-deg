@@ -37,6 +37,22 @@
 #define _Outptr_result_maybenull_
 #define _Outptr_opt_result_maybenull_
 
+// Output reference parameters
+#define _Outref_
+#define _Outref_result_maybenull_
+#define _Outref_result_buffer_(s)
+#define _Outref_result_bytebuffer_(s)
+#define _Outref_result_buffer_to_(s)
+#define _Outref_result_bytebuffer_to_(s, c)
+#define _Outref_result_buffer_all_(s)
+#define _Outref_result_bytebuffer_all_(s)
+#define _Outref_result_buffer_maybenull_(s)
+#define _Outref_result_bytebuffer_maybenull_(s)
+#define _Outref_result_buffer_to_maybenull_(s)
+#define _Outref_result_bytebuffer_to_maybenull_(s)
+#define _Outref_result_buffer_all_maybenull_(s)
+#define _Outref_result_bytebuffer_all_maybenull_(s)
+
 // Success/failure annotations
 #define _Success_(expr)
 
