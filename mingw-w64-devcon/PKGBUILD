@@ -60,14 +60,12 @@ build() {
   # definition somewhere.  Removing the -O1 option would cause a linker
   # error.  This is kind of sketchy, but was the easiest way to compile.
 
-  gcc -O1 -Wno-write-strings \
+  g++ -O1 -Wno-write-strings \
     -DWIN32_LEAN_AND_MEAN=1 -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 \
     -DWINNT=1 -DNTDDI_VERSION=0x06010000 -DUNICODE -D_UNICODE \
     ../C++/*.cpp rc.so \
+    -lsetupapi -lole32 \
     -o devcon.exe
-
-    # -DSTRSAFE_NO_DEPRECATE \
-    # -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
 }
 
 package() {
