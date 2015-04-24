@@ -33,7 +33,7 @@ prepare() {
 
   # mc.exe does not seem to be available in MSYS2, so I had to make
   # these files using Visual Studio.  They are generated from msg.mc.
-  mv "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
+  cp "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
@@ -41,7 +41,10 @@ prepare() {
   # more patches.
   dos2unix *.cpp *.h *.rc
 
-  # patch -p1 -i "${s}/01-strsafe-after-tchar.patch"
+  patch -p1 -i "${s}/01-no-infstr.patch"
+
+  cp "${s}/my_sal.h" .
+  patch -p1 -i "${s}/02-my-sal.patch"
 }
 
 build() {
@@ -49,19 +52,20 @@ build() {
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
-  windres -I../C++ ../C++/devcon.rc rc.so
+  windres ../C++/devcon.rc rc.so
 
   # Optimization level of at least O1 is required to make GCC actually
   # inline the functions in uvcdesc.h, so they don't require a separate
   # definition somewhere.  Removing the -O1 option would cause a linker
   # error.  This is kind of sketchy, but was the easiest way to compile.
 
-  gcc --std=c99 -O1 \
-    ../C++/*.c rc.so \
+  gcc -O1 \
+    -DWIN32_LEAN_AND_MEAN=1 -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 \
+    -DWINNT=1 -DNTDDI_VERSION=0x06010000 -DUNICODE -D_UNICODE \
+    ../C++/*.cpp rc.so \
     -o devcon.exe
 
     # -DSTRSAFE_NO_DEPRECATE \
-    # -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     # -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
 }
 
