@@ -27,8 +27,8 @@ sha256sums=(
 )
 
 prepare() {
-  cd "${srcdir}/C++"
-  s=../..
+  cd "${srcdir}"
+  s=..
 
   # mc.exe does not seem to be available in MSYS2, so I had to make
   # these files using Visual Studio.  They are generated from msg.mc.
@@ -48,12 +48,12 @@ build() {
   cd "${srcdir}"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
-
-  make
+  
 }
 
 package() {
-  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd "${srcdir}"
+  install -Dm644 ../LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
   cd "build-${MINGW_CHOST}"
   install -Dm755 mpack.exe "${pkgdir}${MINGW_PREFIX}/bin/mpack.exe"
   install -Dm755 munpack.exe "${pkgdir}${MINGW_PREFIX}/bin/mpack.exe"
