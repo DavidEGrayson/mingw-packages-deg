@@ -63,3 +63,4 @@
 #define __drv_aliasesMem
 #define _Reserved_
 #define _Analysis_assume_(s)
+#define _Out_opt_
