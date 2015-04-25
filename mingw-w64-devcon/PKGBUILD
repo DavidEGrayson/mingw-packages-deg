@@ -8,7 +8,7 @@
 _realname=devcon
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=2
+pkgrel=3
 pkgdesc='Search for and manipulate devices.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
@@ -32,11 +32,6 @@ prepare() {
   cd "${srcdir}/C++"
   s=../..
 
-  # mc.exe does not seem to be available in MSYS2, so I had to make
-  # these files using Visual Studio.  They are generated from msg.mc.
-  # TODO: try to use windmc.exe instead of this junk
-  cp "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
-
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
   # patches, which will make it hard to use "diff -u -r" to prepare
@@ -59,6 +54,7 @@ build() {
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
+  windmc ../C++/msg.mc
   windres ../C++/devcon.rc rc.so
 
   # Optimization level of at least O1 is required to make GCC actually
