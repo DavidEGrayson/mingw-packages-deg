@@ -46,8 +46,8 @@ prepare() {
   cp "${s}/my_sal.h" .
   patch -p1 -i "${s}/02-my-sal.patch"
 
-  # SetupScanFileQueue expects its callback to be stdcall.  For some
-  # reason this didn't raise an error in mingw64, only mingw32.
+  # SetupScanFileQueue expects its callback to be stdcall.  This is
+  # only needed for mingw32; "stdcall" is ignored on x64.
   patch -p1 -i "${s}/03-stdcall-callback.patch"
 }
 
