@@ -47,6 +47,8 @@ prepare() {
   # SetupScanFileQueue expects its callback to be stdcall.  This is
   # only needed for mingw32; "stdcall" is ignored on x64.
   patch -p1 -i "${s}/03-stdcall-callback.patch"
+
+  windmc msg.mc
 }
 
 build() {
@@ -54,7 +56,6 @@ build() {
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
-  windmc ../C++/msg.mc
   windres ../C++/devcon.rc rc.so
 
   # Optimization level of at least O1 is required to make GCC actually
