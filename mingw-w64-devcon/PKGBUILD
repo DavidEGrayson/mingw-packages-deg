@@ -1,5 +1,7 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
-
+#
+# You might need to run your shell as administrator for devcon to work.
+#
 # An alternative copy of this program can be found at:
 # https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
 
@@ -32,6 +34,7 @@ prepare() {
 
   # mc.exe does not seem to be available in MSYS2, so I had to make
   # these files using Visual Studio.  They are generated from msg.mc.
+  # TODO: try to use windmc.exe instead of this junk
   cp "${s}/msg.h" "${s}/msg.rc" "${s}/msg_MSG00001.bin" .
 
   # Convert all the line endings to Unix right now because the patch
