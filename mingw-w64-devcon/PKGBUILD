@@ -6,7 +6,7 @@
 _realname=devcon
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=1
+pkgrel=2
 pkgdesc='Search for and manipulate devices.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
@@ -45,6 +45,10 @@ prepare() {
 
   cp "${s}/my_sal.h" .
   patch -p1 -i "${s}/02-my-sal.patch"
+
+  # SetupScanFileQueue expects its callback to be stdcall.  For some
+  # reason this didn't raise an error in mingw64, only mingw32.
+  patch -p1 -i "${s}/03-stdcall-callback.patch"
 }
 
 build() {
