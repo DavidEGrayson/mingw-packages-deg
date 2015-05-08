@@ -1,0 +1,59 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+#
+# You might need to run your shell as administrator for devcon to work.
+#
+# An alternative copy of this program can be found at:
+# https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
+
+_realname=win7appid
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.1
+pkgrel=1
+pkgdesc='Windows 7 (and up) shortcut application id tool'
+arch=('any')
+url='https://code.google.com/p/win7appid'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'dos2unix'
+  'patch'
+)
+depends=()
+options=('strip')
+source=(
+    "https://win7appid.googlecode.com/svn/trunk/Win7AppId.cpp"
+    "LICENSE.txt"
+)
+
+sha256sums=(
+    'e6b5d9e5586d1a1e0c7911b951e00a964a80b94db21e74cdc327e523fecb9fa3'
+    'SKIP'
+)
+
+prepare() {
+  cd "${srcdir}"
+
+  # Convert all the line endings to Unix right now because the patch
+  # command will end up doing it automatically for any file it
+  # patches, which will make it hard to use "diff -u -r" to prepare
+  # more patches.
+  dos2unix *.cpp
+}
+
+build() {
+  cd "${srcdir}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+
+  g++ -O1 -municode -DWIN32_LEAN_AND_MEAN=1 -DUNICODE -D_UNICODE \
+    ../*.cpp -lole32 \
+    -o win7appid.exe
+}
+
+package() {
+  cd "${srcdir}"
+  install -Dm644 LICENSE.txt "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE.txt"
+  cd "build-${MINGW_CHOST}"
+  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  install -Dm755 win7appid.exe "${pkgdir}${MINGW_PREFIX}/bin"
+}
