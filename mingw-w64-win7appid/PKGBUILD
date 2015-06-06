@@ -9,22 +9,28 @@ arch=('any')
 url='https://code.google.com/p/win7appid'
 license=('custom')
 makedepends=(
-  "${MINGW_PACKAGE_PREFIX}-gcc"
+    "gzip"
+    "${MINGW_PACKAGE_PREFIX}-gcc"
 )
 depends=()
 options=('strip')
 source=(
     "https://win7appid.googlecode.com/svn/trunk/Win7AppId.cpp"
+    "win7appid.1"
     "LICENSE.txt"
 )
 
 sha256sums=(
     'e6b5d9e5586d1a1e0c7911b951e00a964a80b94db21e74cdc327e523fecb9fa3'
     'SKIP'
+    'SKIP'
 )
 
+prepare() {
+    gzip < win7appid.1 > win7appid.1.gz
+}
+
 build() {
-  cd "${srcdir}"
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
@@ -34,9 +40,13 @@ build() {
 }
 
 package() {
-  cd "${srcdir}"
-  install -Dm644 LICENSE.txt "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE.txt"
+  r="${pkgdir}${MINGW_PREFIX}"
+  mkdir -p "${r}/share/licenses/${_realname}" \
+    "${r}/share/man/man1" "${r}/bin"
+
+  install -m644 LICENSE.txt -t "${r}/share/licenses/${_realname}"
+  install -m644 win7appid.1.gz -t "${r}/share/man/man1"
+
   cd "build-${MINGW_CHOST}"
-  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
-  install -Dm755 win7appid.exe "${pkgdir}${MINGW_PREFIX}/bin"
+  install -m755 win7appid.exe -t "${r}/bin"
 }
