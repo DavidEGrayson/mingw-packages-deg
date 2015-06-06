@@ -1,9 +1,4 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
-#
-# You might need to run your shell as administrator for devcon to work.
-#
-# An alternative copy of this program can be found at:
-# https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
 
 _realname=win7appid
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
