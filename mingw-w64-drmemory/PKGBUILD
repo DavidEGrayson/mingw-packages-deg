@@ -1,0 +1,49 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=drmemory
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.8.1
+pkgrel=1
+pkgdesc='Memory monitoring tool.'
+arch=('any')
+url='https://code.google.com/p/win7appid'
+license=('custom')
+makedepends=(
+    "tar"
+    "${MINGW_PACKAGE_PREFIX}-cmake"
+    "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+depends=()
+options=('strip')
+_tag=release_${pkgver}
+source=(
+    "https://github.com/DynamoRIO/drmemory/archive/${_tag}.tar.gz"
+)
+
+sha256sums=(
+    '8b4e5a1adf8320cc3db22c8f953af425c4b5c82cd404d040f3725dcb935d0c45'
+)
+
+prepare() {
+    echo hi
+}
+
+build() {
+  s="${srcdir}/drmemory-${_tag}"
+  # cd "drmemory-${_tag}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+
+  cmake -G"MSYS Makefiles" ${s}
+  make
+}
+
+package() {
+  r="${pkgdir}${MINGW_PREFIX}"
+  #mkdir -p "${r}/share/licenses/${_realname}" \
+  #  "${r}/share/man/man1" "${r}/bin"
+  #install -m644 LICENSE.txt -t "${r}/share/licenses/${_realname}"
+  #install -m644 win7appid.1.gz -t "${r}/share/man/man1"
+  #cd "build-${MINGW_CHOST}"
+  #install -m755 win7appid.exe -t "${r}/bin"
+}

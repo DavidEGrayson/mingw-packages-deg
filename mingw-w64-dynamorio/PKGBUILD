@@ -1,0 +1,48 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=dynamorio
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=5.0.0
+pkgrel=1
+pkgdesc='Runtime code manipulation system.'
+arch=('any')
+url='https://code.google.com/p/win7appid'
+license=('custom')
+makedepends=(
+    "tar"
+    "${MINGW_PACKAGE_PREFIX}-cmake"
+    "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+depends=()
+options=('strip')
+_tag=release_${pkgver//./_}
+source=(
+    "https://github.com/DynamoRIO/dynamorio/archive/${_tag}.tar.gz"
+)
+
+sha256sums=(
+    '0ce079bc2717cbf9da1a8c3fb528c1c5c1469f7b709c9e4f01e117b75f40b36a'
+)
+
+prepare() {
+    echo hi
+}
+
+build() {
+  s="${srcdir}/dynamorio-${_tag}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+
+  cmake -G"MSYS Makefiles" ${s}
+  make
+}
+
+package() {
+  r="${pkgdir}${MINGW_PREFIX}"
+  #mkdir -p "${r}/share/licenses/${_realname}" \
+  #  "${r}/share/man/man1" "${r}/bin"
+  #install -m644 LICENSE.txt -t "${r}/share/licenses/${_realname}"
+  #install -m644 win7appid.1.gz -t "${r}/share/man/man1"
+  #cd "build-${MINGW_CHOST}"
+  #install -m755 win7appid.exe -t "${r}/bin"
+}
