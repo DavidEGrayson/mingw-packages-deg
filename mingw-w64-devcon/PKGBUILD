@@ -8,7 +8,7 @@
 _realname=devcon
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=3
+pkgrel=1
 pkgdesc='Search for and manipulate devices.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
@@ -22,15 +22,25 @@ depends=()
 options=('strip')
 source=(
   "https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c/file/42722/49/Device%20Console%20(DevCon)%20Tool.zip"
+  '01-no-infstr.patch'
+  '02-my-sal.patch'
+  '03-stdcall-callback.patch'
+  'my_infstr.h'
+  'my_sal.h'
 )
 
 sha256sums=(
   'b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
 )
 
 prepare() {
   cd "${srcdir}/C++"
-  s=../..
+  s=..
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
