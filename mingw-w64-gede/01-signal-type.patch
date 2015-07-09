@@ -1,0 +1,19 @@
+--- src_bad/core.h      2015-07-08 21:16:07.807850100 -0700
++++ src/core.h  2015-07-08 21:23:50.215041300 -0700
+@@ -102,10 +102,10 @@
+
+     enum SignalType
+     {
+-        SIGINT,
+-        SIGTERM,
+-        SIGKILL,
+-        SIGUNKNOWN
++        SIG_INT,
++        SIG_TERM,
++        SIG_KILL,
++        SIG_UNKNOWN
+     };
+     virtual void ICore_onStopped(StopReason reason, QString path, int lineNo) = 0;
+     virtual void ICore_onStateChanged(TargetState state) = 0;
+Common subdirectories: src_bad/debug and src/debug
+diff -u src_bad/Makefile src/Makefile

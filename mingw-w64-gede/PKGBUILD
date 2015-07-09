@@ -1,0 +1,60 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=gede
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.11.1
+pkgrel=1
+pkgdesc='Graphical frontend (GUI) for GDB (mingw-w64)'
+arch=('any')
+url='http://acidron.com/gede'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-qt4"
+)
+options=('strip')
+source=(
+  'http://gede.acidron.com/uploads/source/gede-1.11.1.tar.xz'
+  '01-signal-type.patch'
+  '02-process-info.patch'
+)
+
+sha256sums=(
+  '9f952dcf755532d6f89bf607cc017372488092aa18896c7c87c68120acb0e392'
+  'SKIP'
+  'SKIP'
+)
+
+prepare() {
+  cd "${srcdir}/gede-${pkgver}/src"
+
+  # SIGINT and SIGTERM are preprocessor macros so the enum definition
+  # fails if we don't patch it.
+  patch -p1 -i ../../01-signal-type.patch
+
+  # Fix Linux-specific commands used to manage system processes.
+  patch -p1 -i ../../02-process-info.patch
+}
+
+build() {
+  cd "${srcdir}"
+  mkdir -p "build-${MINGW_CHOST}"
+  cd "build-${MINGW_CHOST}"
+  qmake CONFIG+=release PREFIX="${pkgdir}${MINGW_PREFIX}" ../gede-${pkgver}/src/gd.pro
+  make
+
+  cd "build-${MINGW_CHOST}"
+
+  pwd
+}
+
+package() {
+  r="${pkgdir}${MINGW_PREFIX}"
+  cd "${srcdir}"
+  install -Dm644 LICENSE "${r}/share/licenses/${_realname}/license.rtf"
+  #cd "build-${MINGW_CHOST}"
+  #mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  #install -Dm755 usbview.exe "${pkgdir}${MINGW_PREFIX}/bin"
+}

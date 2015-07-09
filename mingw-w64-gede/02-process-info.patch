@@ -1,0 +1,12 @@
+diff -u src_bad/core.cpp src/core.cpp
+--- src_bad/core.cpp    2015-07-08 21:47:15.739459900 -0700
++++ src/core.cpp  2015-07-08 21:47:30.087970000 -0700
+@@ -407,7 +407,7 @@
+         return;
+     }
+     if(m_pid != 0)
+-        kill(m_pid, SIGINT);
++        errorMsg("Failed to stop because kill() is not available.");
+     else
+         errorMsg("Failed to stop since PID not known");
+ }
