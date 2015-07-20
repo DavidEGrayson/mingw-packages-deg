@@ -1,0 +1,11 @@
+--- fceux-2.2.2-orig/SConstruct 2015-07-20 00:00:59.165446100 -0700
++++ fceux-2.2.2/SConstruct      2015-07-20 00:02:08.145093300 -0700
+@@ -194,7 +194,7 @@
+   prefix = "/usr/local"
+
+ exe_suffix = ''
+-if env['PLATFORM'] == 'win32':
++if env['PLATFORM'] == 'win32' or env['PLATFORM'] == 'msys':
+   exe_suffix = '.exe'
+
+ fceux_src = 'src/fceux' + exe_suffix

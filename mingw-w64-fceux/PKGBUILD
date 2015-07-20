@@ -26,10 +26,12 @@ source=(
   '01-find-gtk.patch'
   '02-use-win-driver.patch'
   '03-no-directx-zlib.patch'
+  '04-exe-suffix.patch'
 )
 
 sha256sums=(
   '804d11bdb4a195f3a580ce5d2d01be877582763378637e16186a22459f5fe5e1'
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -59,6 +61,9 @@ prepare() {
   # Doing so causes a warning and inserts None into a list of files,
   # which crashes scons.
   patch -p1 -i ../03-no-directx-zlib.patch
+
+  # Make sure the EXE suffix is set corectly ('.exe')
+  patch -p1 -i ../04-exe-suffix.patch
 }
 
 build() {
