@@ -13,10 +13,10 @@ makedepends=(
   "scons"
 )
 depends=(
-  "${MINGW_PACKAGE_PREFIX}-gtk2"
   "${MINGW_PACKAGE_PREFIX}-zlib"
-  "${MINGW_PACKAGE_PREFIX}-SDL"   # TODO: does it really depend on this?
   "${MINGW_PACKAGE_PREFIX}-lua"
+  "${MINGW_PACKAGE_PREFIX}-gtk2"  # TODO: does it really depend on this?
+  "${MINGW_PACKAGE_PREFIX}-SDL"   # TODO: does it really depend on this?
   # TODO: what about "gd", the scons script prints a warning about it
   # TODO: what about dw, the scons script prints a warning about it
 )
@@ -25,10 +25,12 @@ source=(
   'http://downloads.sourceforge.net/project/fceultra/Source%20Code/2.2.2%20src/fceux-2.2.2.src.tar.gz'
   '01-find-gtk.patch'
   '02-use-win-driver.patch'
+  '03-no-directx-zlib.patch'
 )
 
 sha256sums=(
   '804d11bdb4a195f3a580ce5d2d01be877582763378637e16186a22459f5fe5e1'
+  'SKIP'
   'SKIP'
   'SKIP'
 )
@@ -52,6 +54,11 @@ prepare() {
   # that the SDL code was probably developed after the Windows code,
   # and contains X11-specific code.
   patch -p1 -i ../02-use-win-driver.patch
+
+  # Don't attempt to use SConscript from directx or zlib directories.
+  # Doing so causes a warning and inserts None into a list of files,
+  # which crashes scons.
+  patch -p1 -i ../03-no-directx-zlib.patch
 }
 
 build() {
