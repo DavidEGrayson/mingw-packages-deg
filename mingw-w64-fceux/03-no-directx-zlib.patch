@@ -1,6 +1,6 @@
---- fceux-2.2.2-orig/src/drivers/win/SConscript 2015-07-19 23:32:26.930239600 -0700
-+++ fceux-2.2.2/src/drivers/win/SConscript      2015-07-19 23:57:30.209096400 -0700
-@@ -48,9 +48,11 @@
+--- fceux-2.2.2-orig/src/drivers/win/SConscript 2015-07-21 09:07:29.640918200 -0700
++++ fceux-2.2.2/src/drivers/win/SConscript      2015-07-21 09:08:08.670295400 -0700
+@@ -48,9 +48,7 @@
  my_list.append('res.o')
  env.Command('res.o', 'res.rc', env['WINDRES'] + ' -Isrc/drivers/win -DLVS_OWNERDATA=0x1000 -o $TARGET $SOURCE')
 
@@ -8,10 +8,6 @@
 -directx
 -zlib""")
 +subdirs = []
-+
-+if env['PLATFORM'] == 'win32':
-+  subdirs.append('directx')
-+  subdirs.append('zlib')
 
  for x in range(len(my_list)):
    my_list[x] = 'drivers/win/' + my_list[x]

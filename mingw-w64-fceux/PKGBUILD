@@ -50,12 +50,12 @@ prepare() {
      vc
 
   # Help the scons script find GTK.
-  patch -p1 -i ../01-find-gtk.patch
+  # patch -p1 -i ../01-find-gtk.patch
 
   # Use the native Windows interface instead of using SDL.  I suspect
   # that the SDL code was probably developed after the Windows code,
   # and contains X11-specific code.
-  patch -p1 -i ../02-use-win-driver.patch
+  # patch -p1 -i ../02-use-win-driver.patch
 
   # Don't attempt to use SConscript from directx or zlib directories.
   # Doing so causes a warning and inserts None into a list of files,
@@ -63,12 +63,12 @@ prepare() {
   patch -p1 -i ../03-no-directx-zlib.patch
 
   # Make sure the EXE suffix is set corectly ('.exe')
-  patch -p1 -i ../04-exe-suffix.patch
+  # patch -p1 -i ../04-exe-suffix.patch
 }
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}"
-  WINDRES=windres scons
+  PLATFORM=win32 WINDRES=windres scons
   cat tmphaxtmphax
 }
 
