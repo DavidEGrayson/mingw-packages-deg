@@ -2,22 +2,22 @@
 
 _realname=intsafe
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.1.20100601
-pkgrel=1
-pkgdesc="Implementation of Microsoft's intsafe.h header."
+pkgver=1
+pkgrel=2
+pkgdesc="Implementation of Microsoft's intsafe.h header (mingw-w64)"
 arch=('any')
-url='https://sourceforge.net/p/mingw-w64/feature-requests/33/'
+url='https://github.com/DavidEGrayson/intsafe'
 license=('custom')
 source=(
-  "https://sourceforge.net/p/mingw-w64/feature-requests/_discuss/thread/bd53aa8b/55a6/attachment/Intsafe.7z"
+  'https://raw.githubusercontent.com/DavidEGrayson/intsafe/master/generated/intsafe.h'
 )
 
 sha256sums=(
-  '7ae91e999b47d1ce31a688a4b89d1382b765f688897be6e5aa7d2eb160c84970'
+  'SKIP'
 )
 
 package() {
   cd "${srcdir}"
   mkdir -p "${pkgdir}${MINGW_PREFIX}/include/"
-  install -m644 intsafe*.h "${pkgdir}${MINGW_PREFIX}/include/"
+  install -m644 intsafe.h "${pkgdir}${MINGW_PREFIX}/include/"
 }
