@@ -6,7 +6,7 @@
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=2
+pkgrel=3
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
@@ -20,15 +20,22 @@ depends=()
 options=('strip')
 source=(
   "https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039/file/51333/38/USBView%20sample%20application.zip"
+  'my_xmlhelper.c'
+  '01-strsafe-after-tchar.patch'
+  '02-sal.patch'
+  '03-resource-fix.patch'
 )
 
 sha256sums=(
   'fd07e8b20f9cff7efd8c01bf2b9cc9ac39ba85c76e56287b80d8abf38ec92287'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
 )
 
 prepare() {
   cd "${srcdir}/C++"
-  s=../..
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
@@ -37,20 +44,17 @@ prepare() {
   dos2unix *.c *.h *.hpp *.rc
 
   # strsafe.h must be after tchar.h in mingw-w64
-  patch -p1 -i "${s}/01-strsafe-after-tchar.patch"
+  patch -p1 -i "../01-strsafe-after-tchar.patch"
 
-  # mingw-w64's sal.h doesn't include enough annotations:
-  # https://msdn.microsoft.com/en-us/library/hh916382.aspx
-  # https://msdn.microsoft.com/en-us/library/jj159529.aspx
-  cp "${s}/my_sal.h" .
-  patch -p1 -i "${s}/02-my-sal.patch"
+  # Include sal.h in some places it is needed.
+  patch -p1 -i "../02-sal.patch"
 
   # We exclude the XML stuff because it requires Visual C++ (.NET).
   rm usbschema.hpp xmlhelper.cpp
-  cp "${s}/my_xmlhelper.c" .
+  cp "../my_xmlhelper.c" .
 
   # Fix some syntax errors that windres complains about
-  patch -p1 -i "${s}/03-resource-fix.patch"
+  patch -p1 -i "../03-resource-fix.patch"
 }
 
 build() {
