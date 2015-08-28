@@ -22,16 +22,12 @@ depends=()
 options=('strip')
 source=(
   "https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c/file/42722/49/Device%20Console%20(DevCon)%20Tool.zip"
-  '01-no-infstr.patch'
   '02-driverspecs.patch'
   '03-stdcall-callback.patch'
-  'my_infstr.h'
 )
 
 sha256sums=(
   'b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
-  'SKIP'
-  'SKIP'
   'SKIP'
   'SKIP'
 )
@@ -44,9 +40,6 @@ prepare() {
   # patches, which will make it hard to use "diff -u -r" to prepare
   # more patches.
   dos2unix -q *.cpp *.h *.rc
-
-  cp "../my_infstr.h" .
-  patch -p1 -i "../01-no-infstr.patch"
 
   # Include driverspecs.h to get __drv_allocatesMem and similar.
   patch -p1 -i "../02-driverspecs.patch"

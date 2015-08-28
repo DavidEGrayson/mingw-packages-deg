@@ -1,5 +1,0 @@
-#pragma once
-#define INFSTR_SECT_VERSION TEXT("Version")
-#define INFSTR_KEY_PROVIDER TEXT("Provider")
-#define INFSTR_KEY_HARDWARE_CLASSGUID TEXT("ClassGUID")
-#define INFSTR_DRIVERVERSION_SECTION TEXT("DriverVer")
