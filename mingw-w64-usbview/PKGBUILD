@@ -6,14 +6,13 @@
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=1
+pkgrel=2
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
-  "${MINGW_PACKAGE_PREFIX}-intsafe"
   'dos2unix'
   'patch'
 )
