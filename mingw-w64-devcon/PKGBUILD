@@ -8,7 +8,7 @@
 _realname=devcon
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=1
+pkgrel=2
 pkgdesc='Search for and manipulate devices.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
@@ -23,10 +23,9 @@ options=('strip')
 source=(
   "https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c/file/42722/49/Device%20Console%20(DevCon)%20Tool.zip"
   '01-no-infstr.patch'
-  '02-my-sal.patch'
+  '02-driverspecs.patch'
   '03-stdcall-callback.patch'
   'my_infstr.h'
-  'my_sal.h'
 )
 
 sha256sums=(
@@ -35,28 +34,26 @@ sha256sums=(
   'SKIP'
   'SKIP'
   'SKIP'
-  'SKIP'
 )
 
 prepare() {
   cd "${srcdir}/C++"
-  s=..
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
   # patches, which will make it hard to use "diff -u -r" to prepare
   # more patches.
-  dos2unix *.cpp *.h *.rc
+  dos2unix -q *.cpp *.h *.rc
 
-  cp "${s}/my_infstr.h" .
-  patch -p1 -i "${s}/01-no-infstr.patch"
+  cp "../my_infstr.h" .
+  patch -p1 -i "../01-no-infstr.patch"
 
-  cp "${s}/my_sal.h" .
-  patch -p1 -i "${s}/02-my-sal.patch"
+  # Include driverspecs.h to get __drv_allocatesMem and similar.
+  patch -p1 -i "../02-driverspecs.patch"
 
   # SetupScanFileQueue expects its callback to be stdcall.  This is
   # only needed for mingw32; "stdcall" is ignored on x64.
-  patch -p1 -i "${s}/03-stdcall-callback.patch"
+  patch -p1 -i "../03-stdcall-callback.patch"
 
   windmc msg.mc
 }
@@ -68,12 +65,7 @@ build() {
 
   windres ../C++/devcon.rc rc.so
 
-  # Optimization level of at least O1 is required to make GCC actually
-  # inline the functions in uvcdesc.h, so they don't require a separate
-  # definition somewhere.  Removing the -O1 option would cause a linker
-  # error.  This is kind of sketchy, but was the easiest way to compile.
-
-  g++ -O1 -municode -Wno-write-strings \
+  g++ -municode -Wno-write-strings ${CFLAGS} ${LDFLAGS} \
     -DWIN32_LEAN_AND_MEAN=1 -DUNICODE -D_UNICODE \
     ../C++/*.cpp rc.so \
     -lsetupapi -lole32 \

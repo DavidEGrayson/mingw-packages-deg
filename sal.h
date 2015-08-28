@@ -162,6 +162,9 @@
 #define _Return_type_success_(expr)
 #define _Success_(expr)
 
+#define _Reserved_
+#define _Const_
+
 // Buffer properties
 #define _Readable_bytes_(s)
 #define _Readable_elements_(s)
