@@ -17,7 +17,7 @@
 
 #define __checkReturn __inner_checkReturn
 
-// Pointer parameters
+/* Pointer parameters */
 #define _In_
 #define _Out_
 #define _Inout_
@@ -46,7 +46,7 @@
 #define _Out_writes_to_ptr_(p)
 #define _Out_writes_to_ptr_z(p)
 
-// Optional pointer parameters
+/* Optional pointer parameters */
 #define _In_opt_
 #define _Out_opt_
 #define _Inout_opt_
@@ -68,14 +68,14 @@
 
 #define _Inout_updates_to_opt_(s, c)
 #define _Inout_updates_bytes_to_opt_(s, c)
-#define _Inout_updates_all_opt_(s, c)
+#define _Inout_updates_all_opt_(s)
 #define _Inout_updates_bytes_all_opt_(s)
 #define _In_reads_to_ptr_opt_(p)
 #define _In_reads_to_ptr_opt_z_(p)
 #define _Out_writes_to_ptr_opt_(p)
 #define _Out_writes_to_ptr_opt_z_(p)
 
-// Output pointer parameters
+/* Output pointer parameters */
 #define _Outptr_
 #define _Outptr_opt_
 #define _Outptr_result_maybenull_
@@ -102,7 +102,7 @@
 #define _Outptr_opt_result_nullonfailure_
 #define _Outref_result_nullonfailure_
 
-// Output reference parameters
+/* Output reference parameters */
 #define _Outref_
 #define _Outref_result_maybenull_
 #define _Outref_result_buffer_(s)
@@ -118,7 +118,7 @@
 #define _Outref_result_buffer_all_maybenull_(s)
 #define _Outref_result_bytebuffer_all_maybenull_(s)
 
-// Return values
+/* Return values */
 #define _Ret_z_
 #define _Ret_writes_(s)
 #define _Ret_writes_bytes_(s)
@@ -135,7 +135,7 @@
 #define _Ret_writes_bytes_maybenull_(s)
 #define _Ret_writes_bytes_to_maybenull_(s, c)
 
-// Other common annotations
+/* Other common annotations */
 #define _In_range_(low, hi)
 #define _Out_range_(low, hi)
 #define _Ret_range_(low, hi)
@@ -147,7 +147,7 @@
 #define _Post_equal_to_(expr)
 #define _Struct_size_bytes_(size)
 
-// Function annotations
+/* Function annotations */
 #define _Called_from_function_class_(name)
 #define _Check_return_ __checkReturn
 #define _Function_class_(name)
@@ -156,7 +156,7 @@
 #define _Must_inspect_result_
 #define _Use_decl_annotations_
 
-// Success/failure annotations
+/* Success/failure annotations */
 #define _Always_(anno_list)
 #define _On_failure_(anno_list)
 #define _Return_type_success_(expr)
@@ -165,7 +165,7 @@
 #define _Reserved_
 #define _Const_
 
-// Buffer properties
+/* Buffer properties */
 #define _Readable_bytes_(s)
 #define _Readable_elements_(s)
 #define _Writable_bytes_(s)
