@@ -52,4 +52,3 @@
  env.Alias('install', env.Command(image_dst, image_src, [Copy(image_dst, image_src)]))
  env.Alias('install', env.Command(desktop_dst, desktop_src, [Copy(desktop_dst, desktop_src)]))
  env.Alias('install', (prefix + "/bin/"))
-Common subdirectories: fceux-2.2.2-orig/src and fceux-2.2.2/src

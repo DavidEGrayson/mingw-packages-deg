@@ -11,21 +11,20 @@ license=('GPL2')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
   "scons"
+  "dos2unix"
 )
 depends=(
   "${MINGW_PACKAGE_PREFIX}-zlib"
   "${MINGW_PACKAGE_PREFIX}-lua"
-  "${MINGW_PACKAGE_PREFIX}-gtk2"  # TODO: does it really depend on this?
-  "${MINGW_PACKAGE_PREFIX}-SDL"   # TODO: does it really depend on this?
   # TODO: what about "gd", the scons script prints a warning about it
   # TODO: what about dw, the scons script prints a warning about it
 )
 options=('strip')
 source=(
   'http://downloads.sourceforge.net/project/fceultra/Source%20Code/2.2.2%20src/fceux-2.2.2.src.tar.gz'
+  '01-public-release.patch'
   '03-no-directx-zlib.patch'
   '05-no-server.patch'
-  '06-unused-local-typedefs.patch'
 )
 
 sha256sums=(
@@ -47,33 +46,23 @@ prepare() {
      fceux-server \
      vc
 
-  # Help the scons script find GTK.
-  # patch -p1 -i ../01-find-gtk.patch
-
-  # Use the native Windows interface instead of using SDL.  I suspect
-  # that the SDL code was probably developed after the Windows code,
-  # and contains X11-specific code.
-  # patch -p1 -i ../02-use-win-driver.patch
+  # The macro PUBLIC_RELEASE is defined by scons by default.
+  # Redefining it in verison.h produces a warning.
+  dos2unix src/version.h
+  patch -p1 -i ../01-public-release.patch
 
   # Don't attempt to use SConscript from directx or zlib directories.
   # Doing so causes a warning and inserts None into a list of files,
   # which crashes scons.
   patch -p1 -i ../03-no-directx-zlib.patch
 
-  # Make sure the EXE suffix is set corectly ('.exe')
-  # patch -p1 -i ../04-exe-suffix.patch
-
   # The server is meant to run under cygwin.
   patch -p1 -i ../05-no-server.patch
-
-  # The CTASSERT macro generates local unused typedefs, so we should
-  # also disable the warning for them.
-  patch -p1 -i ../06-unused-local-typedefs.patch
 }
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}"
-  PLATFORM=win32 WINDRES=windres scons
+  CFLAGS="${CFLAGS} -Wno-unused-local-typedefs" PLATFORM=win32 WINDRES=windres scons
   cat tmphaxtmphax
 }
 
