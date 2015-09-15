@@ -1,0 +1,22 @@
+Binary files fceux-2.2.2-orig/.sconsign.dblite and fceux-2.2.2/.sconsign.dblite differ
+diff -ur fceux-2.2.2-orig/src/lua-engine.cpp fceux-2.2.2/src/lua-engine.cpp
+--- fceux-2.2.2-orig/src/lua-engine.cpp	2015-09-15 08:56:19.578611200 -0700
++++ fceux-2.2.2/src/lua-engine.cpp	2015-09-15 08:56:04.135719400 -0700
+@@ -87,7 +87,6 @@
+ #include <lauxlib.h>
+ #include <lualib.h>
+ #ifdef WIN32
+-#include <lstate.h>
+ 	int iuplua_open(lua_State * L);
+ 	int iupcontrolslua_open(lua_State * L);
+ 	int luaopen_winapi(lua_State * L);
+@@ -108,7 +107,6 @@
+  #define strnicmp strncasecmp
+ 
+  #ifdef __GNUC__
+-  #define __forceinline __attribute__ ((always_inline))
+  #else
+   #define __forceinline
+  #endif
+Only in fceux-2.2.2/src: lua-engine.cpp.orig
+Only in fceux-2.2.2/src: lua-engine.cpp.rej

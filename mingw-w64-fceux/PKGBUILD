@@ -25,10 +25,12 @@ source=(
   '01-public-release.patch'
   '03-no-directx-zlib.patch'
   '05-no-server.patch'
+  '06-lua.patch'
 )
 
 sha256sums=(
   '804d11bdb4a195f3a580ce5d2d01be877582763378637e16186a22459f5fe5e1'
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -58,11 +60,18 @@ prepare() {
 
   # The server is meant to run under cygwin.
   patch -p1 -i ../05-no-server.patch
+
+  # Fix LUA-related code to be more normal.
+  dos2unix src/lua-engine.cpp
+  patch -p1 -i ../06-lua.patch
 }
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}"
-  CFLAGS="${CFLAGS} -Wno-unused-local-typedefs" PLATFORM=win32 WINDRES=windres scons
+  CFLAGS="${CFLAGS} -Wno-unused-local-typedefs" \
+    PLATFORM=win32 \
+    WINDRES=windres \
+    scons
   cat tmphaxtmphax
 }
 
