@@ -15,6 +15,10 @@ EXTERN_C HRESULT ReleaseXmlWriter()
 
 EXTERN_C HRESULT SaveXml(LPTSTR szfileName, DWORD dwCreationDisposition)
 {
+    MessageBox(NULL,
+        "Sorry, XML saving is not supported in this build.",
+        "XML not supported",
+        MB_OK | MB_ICONEXCLAMATION);
     return 0;
 }
 
