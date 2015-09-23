@@ -1,25 +1,32 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
 
-# An alternative copy of this program can be found at:
-# https://github.com/Microsoft/Windows-driver-samples/tree/master/usb/usbview
+# mingw-w64 does not have some of the structs and typedefs needed to
+# build the Windows 10 version of usbview.  For now, we'll build the
+# version from the commit right before the huge Windows 10 commit.
+_commit=5d41613e26e147d2300c786bb2b34cb4b4067a25
+
+# Alternative links:
+# https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039
+# https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039/file/51333/38/USBView%20sample%20application.zip
 
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.1.20140402
+pkgver=0.20140402.5d41613
 pkgrel=3
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
-url='https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
+url=''
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
+  'git'
   'dos2unix'
   'patch'
 )
 depends=()
 options=('strip')
 source=(
-  "https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039/file/51333/38/USBView%20sample%20application.zip"
+  "wds::git+https://github.com/Microsoft/Windows-driver-samples"
   'my_xmlhelper.c'
   '01-strsafe-after-tchar.patch'
   '02-sal.patch'
@@ -27,34 +34,41 @@ source=(
 )
 
 sha256sums=(
-  'fd07e8b20f9cff7efd8c01bf2b9cc9ac39ba85c76e56287b80d8abf38ec92287'
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
 )
 
+#pkgver() {
+#  cd "${srcdir}/wds"
+#  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+#}
+
 prepare() {
-  cd "${srcdir}/C++"
+  cd "${srcdir}/wds/usb/usbview"
+
+  git checkout "${_commit}"
 
   # Convert all the line endings to Unix right now because the patch
   # command will end up doing it automatically for any file it
   # patches, which will make it hard to use "diff -u -r" to prepare
   # more patches.
-  dos2unix -q *.c *.h *.hpp *.rc
+  dos2unix -q *.c *.h *.rc
 
   # strsafe.h must be after tchar.h in mingw-w64
-  patch -p1 -i "../01-strsafe-after-tchar.patch"
+  patch -p1 -i "${srcdir}/01-strsafe-after-tchar.patch"
 
   # Include sal.h in some places it is needed.
-  patch -p1 -i "../02-sal.patch"
+  patch -p1 -i "${srcdir}/02-sal.patch"
 
   # We exclude the XML stuff because it requires Visual C++ (.NET).
   rm usbschema.hpp xmlhelper.cpp
-  cp "../my_xmlhelper.c" .
+  cp "${srcdir}/my_xmlhelper.c" .
 
   # Fix some syntax errors that windres complains about
-  patch -p1 -i "../03-resource-fix.patch"
+  patch -p1 -i "${srcdir}/03-resource-fix.patch"
 }
 
 build() {
@@ -62,19 +76,19 @@ build() {
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
-  windres ../C++/uvcview.rc rc.so
+  windres ../wds/usb/usbview/uvcview.rc rc.so
 
   gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
-    ../C++/*.c rc.so \
+    ../wds/usb/usbview/*.c rc.so \
     -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
     -o usbview.exe
 }
 
 package() {
   cd "${srcdir}"
-  install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
   cd "build-${MINGW_CHOST}"
   mkdir "${pkgdir}${MINGW_PREFIX}/bin"
   install -Dm755 usbview.exe "${pkgdir}${MINGW_PREFIX}/bin"
