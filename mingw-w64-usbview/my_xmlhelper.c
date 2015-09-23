@@ -1,8 +1,5 @@
 #include "xmlhelper.h"
 
-// TODO: change this to actually return an error code so users
-// know the feature is not supported or something
-
 EXTERN_C HRESULT InitXmlHelper()
 {
     return 0;
