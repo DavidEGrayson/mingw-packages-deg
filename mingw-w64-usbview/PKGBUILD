@@ -1,6 +1,10 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
 
-# An alternative copy of this program can be found at:
+# Note: We currently build an older version of usbview from a ZIP file
+# that was on a page that Microsoft has since unpublished.  We are not
+# yet able to build the version of usbview from github because
+# mingw-w64 is missing some new structs/typedefs.
+#
 # https://github.com/Microsoft/Windows-driver-samples/tree/master/usb/usbview
 
 _realname=usbview
@@ -9,7 +13,7 @@ pkgver=0.1.20140402
 pkgrel=3
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
-url='https://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
+url='https://web.archive.org/web/20140824072648/http://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
@@ -37,11 +41,7 @@ sha256sums=(
 prepare() {
   cd "${srcdir}/C++"
 
-  # Convert all the line endings to Unix right now because the patch
-  # command will end up doing it automatically for any file it
-  # patches, which will make it hard to use "diff -u -r" to prepare
-  # more patches.
-  dos2unix -q *.c *.h *.hpp *.rc
+  # dos2unix -q *.c *.h *.hpp *.rc
 
   # strsafe.h must be after tchar.h in mingw-w64
   patch -p1 -i "../01-strsafe-after-tchar.patch"
