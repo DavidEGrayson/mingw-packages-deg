@@ -10,7 +10,7 @@
 _realname=usbview
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=3
+pkgrel=1
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
 arch=('any')
 url='https://web.archive.org/web/20140824072648/http://code.msdn.microsoft.com/windowshardware/USBView-sample-application-e3241039'
