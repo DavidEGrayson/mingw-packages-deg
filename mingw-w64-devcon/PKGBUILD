@@ -7,8 +7,8 @@
 
 _realname=devcon
 pkgbase=mingw-w64-${_realname}
-pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.1.20140402
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r35.818f6ee
 pkgrel=1
 pkgdesc='Search for and manipulate devices (mingw-w64)'
 arch=('any')
@@ -21,26 +21,30 @@ makedepends=(
 depends=()
 options=('strip')
 source=(
-  "https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c/file/42722/49/Device%20Console%20(DevCon)%20Tool.zip"
+  "wds::git+https://github.com/Microsoft/Windows-driver-samples"
   '02-driverspecs.patch'
   '03-stdcall-callback.patch'
 )
 
-sha256sums=('b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
+sha256sums=('SKIP'
             'f0c0c941704e17d1c15c38458993bf8a4f92e04935a9fab3e6caba60694b2234'
             '418eaa11f45d4756afe15da42bec4570f651cb62244f274d1fe00a6fc74614bd')
 
+pkgver() {
+  cd ${srcdir}/wds
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
 prepare() {
-  cd "${srcdir}/C++"
+  cd "${srcdir}/wds/setup/devcon"
 
   # dos2unix -q *.cpp *.h *.rc
 
   # Include driverspecs.h to get __drv_allocatesMem and similar.
-  patch -p1 -i "../02-driverspecs.patch"
+  patch -p1 -i "${srcdir}/02-driverspecs.patch"
 
-  # SetupScanFileQueue expects its callback to be stdcall.  This is
-  # only needed for mingw32; "stdcall" is ignored on x64.
-  patch -p1 -i "../03-stdcall-callback.patch"
+  # SetupScanFileQueue expects its callback to be stdcall.
+  patch -p1 -i "${srcdir}/03-stdcall-callback.patch"
 
   windmc msg.mc
 }
@@ -50,19 +54,19 @@ build() {
   mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
-  windres ../C++/devcon.rc rc.so
+  windres ../wds/setup/devcon/devcon.rc rc.so
 
   g++ -municode -Wno-write-strings ${CFLAGS} ${LDFLAGS} \
     -DWIN32_LEAN_AND_MEAN=1 -DUNICODE -D_UNICODE \
-    ../C++/*.cpp rc.so \
+    ../wds/setup/devcon/*.cpp rc.so \
     -lsetupapi -lole32 \
     -o devcon.exe
 }
 
 package() {
-  cd "${srcdir}"
-  install -Dm644 license.rtf "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
-  cd "build-${MINGW_CHOST}"
+  cd "${srcdir}/wds"
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd "${srcdir}/build-${MINGW_CHOST}"
   mkdir "${pkgdir}${MINGW_PREFIX}/bin"
   install -Dm755 devcon.exe "${pkgdir}${MINGW_PREFIX}/bin"
 }
