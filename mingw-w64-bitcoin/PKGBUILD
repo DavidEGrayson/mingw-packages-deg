@@ -10,6 +10,7 @@
 # > opened by this build will not be portable!
 
 _realname=bitcoin
+pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.10.0
 pkgrel=1

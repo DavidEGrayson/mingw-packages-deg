@@ -1,6 +1,7 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
 
 _realname=secp256k1
+pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 pkgver=r504.14aacdc
 pkgrel=2

@@ -6,6 +6,7 @@
 # https://github.com/Microsoft/Windows-driver-samples/tree/master/setup/devcon
 
 _realname=devcon
+pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
 pkgrel=2
