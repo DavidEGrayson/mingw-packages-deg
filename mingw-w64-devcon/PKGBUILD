@@ -10,9 +10,9 @@ pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
 pkgrel=1
-pkgdesc='Search for and manipulate devices.'
+pkgdesc='Search for and manipulate devices (mingw-w64)'
 arch=('any')
-url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
+url='https://web.archive.org/web/20140920050625/http://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
