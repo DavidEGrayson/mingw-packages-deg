@@ -9,14 +9,13 @@ _realname=devcon
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.1.20140402
-pkgrel=2
+pkgrel=1
 pkgdesc='Search for and manipulate devices.'
 arch=('any')
 url='https://code.msdn.microsoft.com/windowshardware/DevCon-Sample-4e95d71c'
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
-  'dos2unix'
   'patch'
 )
 depends=()
@@ -27,20 +26,14 @@ source=(
   '03-stdcall-callback.patch'
 )
 
-sha256sums=(
-  'b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
-  'SKIP'
-  'SKIP'
-)
+sha256sums=('b69e4daa1ee0feaa0527cf6a699922419c8265f049df60829c0f227746556aa8'
+            'f0c0c941704e17d1c15c38458993bf8a4f92e04935a9fab3e6caba60694b2234'
+            '418eaa11f45d4756afe15da42bec4570f651cb62244f274d1fe00a6fc74614bd')
 
 prepare() {
   cd "${srcdir}/C++"
 
-  # Convert all the line endings to Unix right now because the patch
-  # command will end up doing it automatically for any file it
-  # patches, which will make it hard to use "diff -u -r" to prepare
-  # more patches.
-  dos2unix -q *.cpp *.h *.rc
+  # dos2unix -q *.cpp *.h *.rc
 
   # Include driverspecs.h to get __drv_allocatesMem and similar.
   patch -p1 -i "../02-driverspecs.patch"
