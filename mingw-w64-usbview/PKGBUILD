@@ -6,8 +6,8 @@ pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 provides="${MINGW_PACKAGE_PREFIX}-${_realname}"
 conflicts="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.0.0
-pkgrel=3
-pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer.'
+pkgrel=1
+pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer (mingw-w64)'
 arch=('any')
 url=''
 license=('custom')
@@ -23,9 +23,11 @@ source=(
   '01-strsafe-after-tchar.patch'
   '02-sal.patch'
   '03-resource-fix.patch'
+  '04-redefinition.patch'
 )
 
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -57,16 +59,23 @@ prepare() {
 
   # Fix some syntax errors that windres complains about
   patch -p1 -i "${srcdir}/03-resource-fix.patch"
+
+  # Fix warnings about macro redefinitions.
+  patch -p1 -i "${srcdir}/04-redefinition.patch"
 }
 
 build() {
   cd "${srcdir}"
-  mkdir -p "build-${MINGW_CHOST}"
+  mkdir -p "build-${MINGW_CHOST}/include"
   cd "build-${MINGW_CHOST}"
+
+  # Make sure mingw-w64's usb.h takes precedence over libusb-compat's.
+  cp ${MINGW_PREFIX}/${MINGW_CHOST}/include/usb.h include
 
   windres ../wds/usb/usbview/uvcview.rc rc.so
 
   gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
+    -Iinclude \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
     ../wds/usb/usbview/*.c rc.so \
