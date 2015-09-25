@@ -24,9 +24,11 @@ source=(
   '02-sal.patch'
   '03-resource-fix.patch'
   '04-redefinition.patch'
+  '05-connection-statuses.patch'
 )
 
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -62,6 +64,9 @@ prepare() {
 
   # Fix warnings about macro redefinitions.
   patch -p1 -i "${srcdir}/04-redefinition.patch"
+
+  # Fix bad definition of array without a length.
+  patch -p1 -i "${srcdir}/05-connection-statuses.patch"
 }
 
 build() {
