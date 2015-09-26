@@ -182,8 +182,6 @@
 #define _Post_readable_byte_size_(s)
 #define _Post_writable_byte_size_(s)
 
-#define _Analysis_assume_(expr)
-
 /* Field properties */
 #define _Field_size_(s)
 #define _Field_size_full_(s)
@@ -205,6 +203,10 @@
 #define _At_buffer_(e, i, c, a)
 #define _Group_(a)
 #define _When_(e, a)
+
+/* Analysis */
+#define _Analysis_assume_(expr)
+#define _Analysis_assume_nullterminated_(expr)
 
 #endif
 
