@@ -22,12 +22,16 @@ source=(
   '01-includes.patch'
   '02-intsafe.patch'
   '03-read-thread-proc.patch'
+  '04-bad-comparison.patch'
+  '05-other-bad-comparison.patch'
 )
 
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+            'c5e16ddaa76e5d2dbcf3d8b5083f9a2dfca74f869419c2e5be9b7444b05a72db'
+            '6c73b234ff46a20cae7de86e6d96f53629624c9b3d005d72030500e95616b826'
+            '6f2f2ffe160cf71c43fb0224efabf045490ef0202921600f79c45b0bab527e45'
+            '8c879599a1cf95ed838be8030acb2d74d85989de10a61c7ac1e9243266d1c361'
+            'e673215729689b21fd4b6b246e70ed4a8d75fea871dac6b0ec410bf4fc87d60c')
 
 pkgver() {
   cd "${srcdir}/wds"
@@ -44,6 +48,14 @@ prepare() {
 
   # GCC distinguishes between void pointers and other pointers.
   patch -p1 -i "${srcdir}/03-read-thread-proc.patch"
+
+  # GCC warns about this because sizeof() for an array parameter
+  # just returns the size of a pointer.
+  patch -p1 -i "${srcdir}/04-bad-comparison.patch"
+
+  # Fix a compile warning from comparing two different pointer types without a
+  # cast.
+  patch -p1 -i "${srcdir}/05-other-bad-comparison.patch"
 }
 
 build() {
