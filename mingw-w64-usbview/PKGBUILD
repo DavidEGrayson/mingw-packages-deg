@@ -26,14 +26,12 @@ source=(
   '05-connection-statuses.patch'
 )
 
-sha256sums=(
-  'SKIP'
-  'SKIP'
-  'SKIP'
-  'SKIP'
-  'SKIP'
-  'SKIP'
-)
+sha256sums=('SKIP'
+            'c753691eea14e4cd267cc9a8e1afbf97648e9fda57cf68011384e4a5b1421c2e'
+            '36173cc353ca4901c23f971980a1ff59c007b952dd602d4faa5a34c7d7fc3518'
+            '2be3167e95f8d5d8abf91e43a49fac4593b8264df5c20478f476bdbe1bae89a3'
+            '017bcb16508f6496e227dce96bd547ed1be20f2712742a05bafd4460924d3aad'
+            'edcbf4392677934b21234e57a0094ce46f34053b51509719b186a18d7bdddc8e')
 
 pkgver() {
   cd "${srcdir}/wds"
