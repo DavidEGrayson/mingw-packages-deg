@@ -263,30 +263,6 @@ typedef struct _USB_DEVICE_CAPABILITY_SUPERSPEED_USB_DESCRIPTOR {
 #define USB_DEVICE_CAPABILITY_MAX_U1_LATENCY 0x0a
 #define USB_DEVICE_CAPABILITY_MAX_U2_LATENCY 0x07ff
 
-typedef struct _USB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR {
-  UCHAR bLength;
-  UCHAR bDescriptorType;
-  UCHAR bDevCapabilityType;
-  UCHAR iAddtionalInfoURL;
-  UCHAR bNumberOfAlternateModes;
-  UCHAR bPreferredAlternateMode;
-  union {
-    USHORT AsUshort;
-    struct {
-      USHORT VConnPowerNeededForFullFunctionality:3;
-      USHORT Reserved:12;
-      USHORT NoVconnPowerRequired:1;
-    };
-  } VconnPower;
-  UCHAR bmConfigured[32];
-  ULONG bReserved;
-  struct {
-    USHORT wSVID;
-    UCHAR bAlternateMode;
-    UCHAR iAlternateModeSetting;
-  } AlternateMode[1];
-} USB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR,*PUSB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR;
-
 typedef struct _USB_DEVICE_CAPABILITY_CONTAINER_ID_DESCRIPTOR {
   UCHAR bLength;
   UCHAR bDescriptorType;
@@ -656,6 +632,37 @@ typedef struct _USB_INTERFACE_POWER_DESCRIPTOR {
   USHORT TransitionTimeFromD2;
   USHORT TransitionTimeFromD3;
 } USB_INTERFACE_POWER_DESCRIPTOR,*PUSB_INTERFACE_POWER_DESCRIPTOR;
+
+typedef struct _USB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR {
+  UCHAR bLength;
+  UCHAR bDescriptorType;
+  UCHAR bDevCapabilityType;
+  UCHAR iAddtionalInfoURL;
+  UCHAR bNumberOfAlternateModes;
+  UCHAR bPreferredAlternateMode;
+  union {
+    USHORT AsUshort;
+    struct {
+      USHORT VConnPowerNeededForFullFunctionality:3;
+      USHORT Reserved:12;
+      USHORT NoVconnPowerRequired:1;
+    };
+  } VconnPower;
+  UCHAR bmConfigured[32];
+  ULONG bReserved;
+  struct {
+    USHORT wSVID;
+    UCHAR bAlternateMode;
+    UCHAR iAlternateModeSetting;
+  } AlternateMode[1];
+} USB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR,*PUSB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR;
+
+typedef struct _USB_SUPERSPEEDPLUS_ISOCH_ENDPOINT_COMPANION_DESCRIPTOR {
+  UCHAR bLength;
+  UCHAR bDescriptorType;
+  USHORT wReserved;
+  ULONG dwBytesPerInterval;
+} USB_SUPERSPEEDPLUS_ISOCH_ENDPOINT_COMPANION_DESCRIPTOR,*PUSB_SUPERSPEEDPLUS_ISOCH_ENDPOINT_COMPANION_DESCRIPTOR;
 
 #include <poppack.h>
 

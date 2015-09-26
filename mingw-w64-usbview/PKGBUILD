@@ -43,8 +43,6 @@ sha256sums=(
 prepare() {
   cd "${srcdir}/wds/usb/usbview"
 
-  git checkout "${_commit}"
-
   # dos2unix -q *.c *.h *.rc
 
   # strsafe.h must be after tchar.h in mingw-w64.
