@@ -20,15 +20,13 @@ options=('strip')
 source=(
   "wds::git+https://github.com/Microsoft/Windows-driver-samples"
   'my_xmlhelper.c'
-  '01-strsafe-after-tchar.patch'
-  '02-sal.patch'
+  '01-uvcview-includes.patch'
   '03-resource-fix.patch'
   '04-redefinition.patch'
   '05-connection-statuses.patch'
 )
 
 sha256sums=(
-  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -49,11 +47,9 @@ prepare() {
 
   # dos2unix -q *.c *.h *.rc
 
-  # strsafe.h must be after tchar.h in mingw-w64
-  patch -p1 -i "${srcdir}/01-strsafe-after-tchar.patch"
-
-  # Include sal.h in some places it is needed.
-  patch -p1 -i "${srcdir}/02-sal.patch"
+  # strsafe.h must be after tchar.h in mingw-w64.
+  # sal.h and usbspec.h are  needed.
+  patch -p1 -i "${srcdir}/01-uvcview-includes.patch"
 
   # We exclude the XML stuff because it requires Visual C++ (.NET).
   rm usbschema.hpp xmlhelper.cpp
@@ -79,7 +75,12 @@ build() {
 
   windres ../wds/usb/usbview/uvcview.rc rc.so
 
+  # The include hack below requires you to edit usb200.h to
+  # include usbspec.h using angle brackets instead of quotes.
+  # TODO: remove the hack after mingw-w64 gets patched
+
   gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
+    -I/d/builds/mingw-packages-deg/include/ \
     -Iinclude \
     -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
     -DSTRSAFE_NO_DEPRECATE \
