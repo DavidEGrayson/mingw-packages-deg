@@ -1,0 +1,70 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=hclient
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+provides="${MINGW_PACKAGE_PREFIX}-${_realname}"
+conflicts="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=35.818f6ee
+pkgrel=1
+pkgdesc='Communicates with HIDs (mingw-w64)'
+arch=('any')
+url=''
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'patch'
+)
+depends=()
+options=('strip')
+source=(
+  "wds::git+https://github.com/Microsoft/Windows-driver-samples"
+  '01-includes.patch'
+)
+
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+  cd "${srcdir}/wds"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/wds/hid/${_realname}"
+
+  patch -p1 -i "${srcdir}/01-includes.patch"
+}
+
+build() {
+  cd "${srcdir}"
+  mkdir -p "build-${MINGW_CHOST}/include"
+  cd "build-${MINGW_CHOST}"
+
+  # Make sure mingw-w64's usb.h takes precedence over libusb-compat's.
+  #cp ${MINGW_PREFIX}/${MINGW_CHOST}/include/usb.h include
+
+  windres ../wds/hid/hclient/hclient.rc rc.so
+
+  # The include hack below requires you to edit usb200.h to
+  # include usbspec.h using angle brackets instead of quotes.
+  # TODO: remove the hack after mingw-w64 gets patched
+  #  -Iinclude \
+
+  gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
+    -I/d/builds/mingw-packages-deg/include/ \
+    -fmax-errors=5 \
+    -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
+    -DSTRSAFE_NO_DEPRECATE \
+    ../wds/hid/hclient/*.c rc.so \
+    -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
+    -o hclient.exe
+}
+
+package() {
+  cd "${srcdir}/wds"
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  mkdir "${pkgdir}${MINGW_PREFIX}/bin"
+  install -Dm755 hclient.exe "${pkgdir}${MINGW_PREFIX}/bin"
+}
