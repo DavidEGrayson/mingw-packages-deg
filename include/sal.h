@@ -94,6 +94,7 @@
 #define _Outptr_opt_result_bytebuffer_(s)
 #define _Outptr_result_buffer_to_(s, c)
 #define _Outptr_result_bytebuffer_to_(s, c)
+#define _Outptr_result_bytebuffer_maybenull_(s)
 #define _Outptr_opt_result_buffer_to_(s, c)
 #define _Outptr_opt_result_bytebuffer_to_(s, c)
 #define _Result_nullonfailure_
@@ -198,6 +199,12 @@
 #define _Field_size_bytes_part_opt_(s, c)
 #define _Field_z_
 #define _Field_range_(min,max)
+
+/* Structural annotations */
+#define _At_(e, a)
+#define _At_buffer_(e, i, c, a)
+#define _Group_(a)
+#define _When_(e, a)
 
 #endif
 

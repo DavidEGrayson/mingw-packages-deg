@@ -20,9 +20,11 @@ options=('strip')
 source=(
   "wds::git+https://github.com/Microsoft/Windows-driver-samples"
   '01-includes.patch'
+  '02-intsafe.patch'
 )
 
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP')
 
 pkgver() {
@@ -34,6 +36,7 @@ prepare() {
   cd "${srcdir}/wds/hid/${_realname}"
 
   patch -p1 -i "${srcdir}/01-includes.patch"
+  patch -p1 -i "${srcdir}/02-intsafe.patch"
 }
 
 build() {
