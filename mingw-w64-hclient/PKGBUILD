@@ -21,9 +21,11 @@ source=(
   "wds::git+https://github.com/Microsoft/Windows-driver-samples"
   '01-includes.patch'
   '02-intsafe.patch'
+  '03-read-thread-proc.patch'
 )
 
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP')
 
@@ -36,7 +38,12 @@ prepare() {
   cd "${srcdir}/wds/hid/${_realname}"
 
   patch -p1 -i "${srcdir}/01-includes.patch"
+
+  # GCC distinguishes between unsigned long and unsigned int.
   patch -p1 -i "${srcdir}/02-intsafe.patch"
+
+  # GCC distinguishes between void pointers and other pointers.
+  patch -p1 -i "${srcdir}/03-read-thread-proc.patch"
 }
 
 build() {
