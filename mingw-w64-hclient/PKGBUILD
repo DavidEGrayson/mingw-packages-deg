@@ -25,6 +25,7 @@ source=(
   '04-bad-comparison.patch'
   '05-other-bad-comparison.patch'
   '06-size-t.patch'
+  '07-dialog-proc.patch'
 )
 
 sha256sums=('SKIP'
@@ -33,7 +34,8 @@ sha256sums=('SKIP'
             '6f2f2ffe160cf71c43fb0224efabf045490ef0202921600f79c45b0bab527e45'
             '8c879599a1cf95ed838be8030acb2d74d85989de10a61c7ac1e9243266d1c361'
             'e673215729689b21fd4b6b246e70ed4a8d75fea871dac6b0ec410bf4fc87d60c'
-            '94b4ebd39a372cf105d45daa1be9c5286dc307a82325273c9925253985c736c8')
+            '94b4ebd39a372cf105d45daa1be9c5286dc307a82325273c9925253985c736c8'
+            'c2caed5841c2212ec43b7799b0140fcdd5e217b0488f8cfe9318a19841e0eb32')
 
 pkgver() {
   cd "${srcdir}/wds"
@@ -61,6 +63,9 @@ prepare() {
 
   # size_t is different from SIZE_T
   patch -p1 -i "${srcdir}/06-size-t.patch"
+
+  # DlgProcs are supposed to return INT_PTR, which is different from LRESULT.
+  patch -p1 -i "${srcdir}/07-dialog-proc.patch"
 }
 
 build() {
