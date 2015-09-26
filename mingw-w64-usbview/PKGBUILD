@@ -5,7 +5,7 @@ pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 provides="${MINGW_PACKAGE_PREFIX}-${_realname}"
 conflicts="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.0.0
+pkgver=35.818f6ee
 pkgrel=1
 pkgdesc='GUI for browsing all USB controllers and connected USB devices on your computer (mingw-w64)'
 arch=('any')
@@ -35,10 +35,10 @@ sha256sums=(
   'SKIP'
 )
 
-#pkgver() {
-#  cd "${srcdir}/wds"
-#  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-#}
+pkgver() {
+  cd "${srcdir}/wds"
+  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
 
 prepare() {
   cd "${srcdir}/wds/usb/usbview"
@@ -88,9 +88,9 @@ build() {
 }
 
 package() {
-  cd "${srcdir}"
-  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/license.rtf"
-  cd "build-${MINGW_CHOST}"
+  cd "${srcdir}/wds"
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  cd "${srcdir}/build-${MINGW_CHOST}"
   mkdir "${pkgdir}${MINGW_PREFIX}/bin"
   install -Dm755 usbview.exe "${pkgdir}${MINGW_PREFIX}/bin"
 }
