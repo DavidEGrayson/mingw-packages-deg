@@ -399,7 +399,8 @@ typedef struct _USB_SUPERSPEED_ENDPOINT_COMPANION_DESCRIPTOR {
     } Bulk;
     struct {
       UCHAR Mult:2;
-      UCHAR Reserved2:6;
+      UCHAR Reserved2:5;
+      UCHAR SspCompanion:1;
     } Isochronous;
   } bmAttributes;
   USHORT wBytesPerInterval;
