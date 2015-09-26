@@ -63,23 +63,12 @@ build() {
   mkdir -p "build-${MINGW_CHOST}/include"
   cd "build-${MINGW_CHOST}"
 
-  # Make sure mingw-w64's usb.h takes precedence over libusb-compat's.
-  #cp ${MINGW_PREFIX}/${MINGW_CHOST}/include/usb.h include
-
   windres ../wds/hid/hclient/hclient.rc rc.so
-
-  # The include hack below requires you to edit usb200.h to
-  # include usbspec.h using angle brackets instead of quotes.
-  # TODO: remove the hack after mingw-w64 gets patched
-  #  -Iinclude \
 
   gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
     -I/d/builds/mingw-packages-deg/include/ \
-    -fmax-errors=5 \
-    -DNTDDI_VERSION=0x06020000 -D_WIN32_WINNT=0x0602 \
-    -DSTRSAFE_NO_DEPRECATE \
     ../wds/hid/hclient/*.c rc.so \
-    -lcomctl32 -lcomdlg32 -lsetupapi -lshell32 -lshlwapi -lole32 -lgdi32 \
+    -lsetupapi -lhid \
     -o hclient.exe
 }
 
