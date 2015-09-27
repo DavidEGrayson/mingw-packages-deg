@@ -28,14 +28,21 @@ source=(
 )
 
 sha256sums=('SKIP'
-            '0e4b21cd4de80908f288c4bbc16d29f7e2dc3fb3809cd759a24ac9f93e896ef9'
+            '7895d08099a27f8bc0641d28547e70e0340f85aab5fcdd92c97400ae6a3f1b17'
             'd543c1fd4944ea51d46d4abf31bfb8cde9bd1c65cb36dc6b83e51ce875660ca0')
 
 prepare() {
   cd "${srcdir}/tt"
 
-  # You can remake teraterm_sha256sums.txt with this command:
-  #   find -not -wholename '*.svn*' -a -type f | xargs sha256sum > ../teraterm_sha256sums.txt
+  # Delete binaries so we don't accidentally use them.
+  find -name '*.dll' -delete
+  find -name '*.exe' -delete
+  find -name '*.lib' -delete
+
+  # You can remake teraterm_sha256sums.txt by temporarily
+  # uncommenting this command:
+  #   find -not -wholename '*.svn*' -a -type f | \
+  #     xargs sha256sum > "${srcdir}/teraterm_sha256sums.txt
   sha256sum --quiet -c "${srcdir}/teraterm_sha256sums.txt"
 
   echo

@@ -2,7 +2,6 @@
 1e6624da430e289466584f9642a266e213816207d8b82f2dcf7c1bb9c446ca5e *./.makepkg/README.txt
 5988c9971dafae433d1147585a3ed889aa0b9930e0d13db5b1d121c5fbe51a46 *./.makepkg/servers
 ffa814174a7b9ff4f6587ea6fad388cb695bc55121f10aaea886d99fc78e7a22 *./cygterm/cyglaunch.c
-d7c3355b640d9880e725ac656bdd157c0217d3d0acd16af1fa97f1611b37a97f *./cygterm/cygterm+-x86_64/cygterm.exe
 32b8c4f7a41b6f0b1cdf7e09210a3865e7b678abe2c41caf257598be0ad27843 *./cygterm/cygterm.bmp
 11138b59e0cb77495dfe22fc8404c86420e0b86c6d9959b803998742c12a165f *./cygterm/cygterm.cc
 e2f568cad5c80c46af1703044e6ccd68368f2ba61b6d5323b53241c4288e84c4 *./cygterm/cygterm.cfg
@@ -784,12 +783,7 @@ f39c257414def4dc4a9a113c429f494a5810dca7aebf4d7bb33cde1f0e64bfff *./installer/la
 3a9cf6b41408f6a082d43317d65f86035895aa89b1382dcd14c7d3ed81dc9605 *./installer/makearchive.bat
 88ad45af1c877a665ac4b45ba79055fa5c512c423d77d2a16521558bfd5a6f9b *./installer/makechm.bat
 847f0b2bde6933424944477d6244db27748aef1e938a7a2d2d2b297428b6765f *./installer/readmej.txt
-258f0bee52c94d5405a57210e156d413e62b634416a78e8595d1ef76d65b8520 *./installer/release/Collector/Collector.exe
 900025eab208b987ee88693c4c9d316f4abc9dcb3b135f9aeec77875f11f99fa *./installer/release/Collector/collector.ini
-4869a45bfaf0b413a9a3f192206559bd514b51490133d6a31f17ac32bfb95b40 *./installer/release/Collector/Collector_org.exe
-8b8c21fb1d977cd37749a8c063b437ba46bca814ed023ebb89844347c066c58b *./installer/release/Collector/hthook.dll
-0ba3168b794efafcb93c99d4e1517aa168209f524a14eeaf703998807f5a1568 *./installer/release/Collector/mfc70.dll
-f68e4cdbc879423ea47d763a6768567f5f8063924f13a74239750c13fa8d168a *./installer/release/Collector/msvcr70.dll
 ef512f502a5dd4fdbd3b4e37d7993f300fa4da97990fa3d79b00ff205060a912 *./installer/release/Collector/readme.txt
 91995d06f0baafde0db504b600584894f1aea93266a247bd6a7ba6083107c43a *./installer/release/delpassw.ttl
 3383363d7dcc2f0dc62ec89e32833ccc945bafcf9f8c43502b3ca850ebbe8ed6 *./installer/release/dialup.ttl
@@ -809,7 +803,6 @@ cba037d79ec9fc636a579e87f67fb073368b82e67157102bbd1a026e363c476d *./installer/re
 20ae83688c06d2f0a061db0f55ebcff9dfee6a8e33a12d0d99787cea54fe92e6 *./installer/release/mpause.ttl
 bbe2f1acc2e8c4612618cfd6bbb39575269c7ea427af8b926cfac7f57046d0bc *./installer/release/NT98KEYB.CNF
 077aceef7d08689b5ff9612f8b55276a5bd1aaaa9f7c98132d7265463b80cdfa *./installer/release/PC98KEYB.CNF
-ed0478d4dad0053e208ac12600139bfa45e519aa3fd74804a535b370ca1590cc *./installer/release/plugin/ttAKJpeg.dll
 b321c8331da30f19e8a3cfbf8861b4f9d2ca74cf68538691348f6d6192fe9f69 *./installer/release/plugin/ttAKJpeg.txt
 29e1d45ce36ae651fd859adf7c2192dec38fd9912637eacc72932833f9e77e2c *./installer/release/random.ttl
 df9ba3d0109945f4ecea536715ceef9d1cbcd9c1c84c1699cd5cc8d9905b1334 *./installer/release/README-archive-ja.txt
@@ -866,7 +859,6 @@ f82af19c7f123f29ac255f6e9c93cba3e53563ae579c03f3ebafffe1663cf443 *./teraterm/com
 592b5ce64edc98c211a9d2bc1f8969aec9e66c458338e5489f5bb2a1b884883b *./teraterm/common/vt16.ico
 1c3dce6297c2596266620a544c0b8edad10fbc192ca0aa1ea171e18a41ae250e *./teraterm/common/vt_classic.ico
 ed1228d4dcd4f58d125ecf2736a0ac929c32471cc8e6bebafc102e59468b187a *./teraterm/htmlhelp/htmlhelp.h
-9b87bc6975304666cd28ca3f45ba22af54c6025f6eebac24a883e97059e15e60 *./teraterm/htmlhelp/htmlhelp.lib
 09214133778fc13e7262652f3cffaa867d4c64730c96f5145a5e26bbe1518d39 *./teraterm/keycode/kc_res.h
 58163f0d205de849c34e1b6472cd260ed98c1313ad49596959e03dff753d523d *./teraterm/keycode/keycod16.ico
 746d04b950a8bc2dc9cc4dc21d9e4f6d2994a9883af0551ed61774afd9c1a11d *./teraterm/keycode/keycode.c
