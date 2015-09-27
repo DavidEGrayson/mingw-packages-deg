@@ -1,0 +1,51 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+# http://svn.osdn.jp/svnroot/ttssh2/tags/teraterm-4_88/
+
+_realname=teraterm
+pkgbase="mingw-w64-${_realname}"
+pkgname="${MINGW_PACKAGE_PREFIX}-${realname}"
+pkgver=4.88
+pkgrel=1
+pkgdesc="Terminal emulator for serial and SSH connections (mingw-w64)"
+arch=('any')
+url="https://ttssh2.osdn.jp"
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'patch'
+)
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-oniguruma"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-zlib"
+)
+options=('strip')
+source=(
+  "tt::svn+http://svn.osdn.jp/svnroot/ttssh2/tags/teraterm-4_88/"
+  "teraterm_sha256sums.txt"
+  "http://the.earth.li/~sgtatham/putty/latest/putty-0.65.tar.gz"
+)
+
+sha256sums=('SKIP'
+            '0e4b21cd4de80908f288c4bbc16d29f7e2dc3fb3809cd759a24ac9f93e896ef9'
+            'd543c1fd4944ea51d46d4abf31bfb8cde9bd1c65cb36dc6b83e51ce875660ca0')
+
+prepare() {
+  cd "${srcdir}/tt"
+
+  # You can remake teraterm_sha256sums.txt with this command:
+  #   find -not -wholename '*.svn*' -a -type f | xargs sha256sum > ../teraterm_sha256sums.txt
+  sha256sum --quiet -c "${srcdir}/teraterm_sha256sums.txt"
+
+  echo
+}
+
+build() {
+  echo build not implemented, stopping
+  exit 1
+}
+
+package() {
+  echo
+}
