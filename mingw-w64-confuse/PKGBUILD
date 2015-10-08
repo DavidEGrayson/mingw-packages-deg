@@ -1,44 +1,41 @@
 # Maintainer: David Grayson <davidegrayson@gmail.com>
 
-_realname=libftdi
+_realname=confuse
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=1.2
+pkgver=2.7
 pkgrel=1
-pkgdesc='Library to talk to FTDI chips (mingw-w64)'
+pkgdesc='Library for parsing configuration files (mingw-w64)'
 arch=('any')
 url="https://www.intra2net.com/en/developer/libftdi/"
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
-  "${MINGW_PACKAGE_PREFIX}-cmake"
-  "${MINGW_PACKAGE_PREFIX}-boost"
+  "${MINGW_PACKAGE_PREFIX}-gettext"
 )
-depends=(
-  "${MINGW_PACKAGE_PREFIX}-libusb"
-  # TODO: libConfuse
-)
+depends=()  # TODO: run-time dependencies for gettext (libintl.dll)?
 options=('staticlibs' 'strip')
 source=(
-  "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-${pkgver}.tar.bz2"
+  "http://savannah.nongnu.org/download/confuse/confuse-${pkgver}.tar.gz"
 )
 
-sha256sums=('a6ea795c829219015eb372b03008351cee3fb39f684bff3bf8a4620b558488d6')
+sha256sums=('e32574fd837e950778dac7ade40787dd2259ef8e28acd6ede6847ca895c88778')
 
 prepare() {  # TODO: remove
-  cd "${srcdir}/${_realname}1-${pkgver}"
+  cd "${srcdir}/${_realname}-${pkgver}"
 }
 
 build() {
   mkdir -p "${srcdir}/build-${MINGW_CHOST}"
   cd "${srcdir}/build-${MINGW_CHOST}"
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  ${MINGW_PREFIX}/bin/cmake \
-    -G"MSYS Makefiles" \
-    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DEXAMPLES=Off \
-    "../${_realname}1-${pkgver}/"
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}" \
+    --enable-static \
+    --enable-shared \
+    --disable-examples \
 
   make
 }
