@@ -23,18 +23,6 @@ sha256sums=('e32574fd837e950778dac7ade40787dd2259ef8e28acd6ede6847ca895c88778')
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
-
-  {
-    echo <<EOF
-This project uses the ISC license, and you can see one instance of that license
-in confuse.h.  However, there are other licenses spread throughout the source
-code with varying copyright messages.  In an attempt to obey each license, we
-generated this file with grep.
-
-------
-EOF
-    grep -hir --after-context=100 Copyright src
-  } > "${srcdir}/LICENSE"
 }
 
 build() {
@@ -63,6 +51,6 @@ package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
-  cd "${srcdir}"
-  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  # Note: The ISC license used by this project can be found in confuse.h, and
+  # this project does not provided a stand-alone license file.
 }
