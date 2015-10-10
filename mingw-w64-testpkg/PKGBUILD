@@ -1,0 +1,45 @@
+
+_realname=testpkg
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Test package'
+arch=('any')
+url='http://www.example.com/'
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+depends=()
+options=()
+source=()
+
+sha256sums=()
+
+prepare() {
+  mkdir -p "${srcdir}/${_realname}-${pkgver}"
+}
+
+build() {
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+
+  {
+    echo "#!/usr/bin/bash"
+    echo "cd \"$(cygpath -m /)\""
+    echo "pwd"
+    echo "cd \"$(cygpath -w /)\""
+    echo "pwd"
+  } > testpkg
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+
+  install -Dm644 testpkg "${pkgdir}${MINGW_PREFIX}/bin/testpkg"
+}
