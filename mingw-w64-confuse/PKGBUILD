@@ -3,7 +3,7 @@
 _realname=confuse
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=2.7
+pkgver=2.7.r247
 pkgrel=1
 pkgdesc='Library for parsing configuration files (mingw-w64)'
 arch=('any')
@@ -16,20 +16,27 @@ makedepends=(
 depends=()  # TODO: run-time dependencies for gettext (libintl.dll)?
 options=('staticlibs' 'strip')
 source=(
-  "http://savannah.nongnu.org/download/confuse/confuse-${pkgver}.tar.gz"
+  "https://github.com/DavidEGrayson/libconfuse/archive/david.zip"
 )
 
-sha256sums=('e32574fd837e950778dac7ade40787dd2259ef8e28acd6ede6847ca895c88778')
+sha256sums=('SKIP') # TODO: updpkgsums
 
 prepare() {
-  cd "${srcdir}/${_realname}-${pkgver}"
+  # We can't use autogen.sh because it runs configure.
+
+  cd "${srcdir}/lib${_realname}-david"
+  autopoint
+  aclocal -I m4
+  autoconf
+  autoheader
+  libtoolize --automake
+  automake --add-missing
 }
 
 build() {
   mkdir -p "${srcdir}/build-${MINGW_CHOST}"
   cd "${srcdir}/build-${MINGW_CHOST}"
-  MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
-  "../${_realname}-${pkgver}/configure" \
+  "../lib${_realname}-david/configure" \
     --prefix="${MINGW_PREFIX}" \
     --build="${MINGW_CHOST}" \
     --host="${MINGW_CHOST}" \
@@ -51,6 +58,5 @@ package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
-  # Note: The ISC license used by this project can be found in confuse.h, and
-  # this project does not provided a stand-alone license file.
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }
