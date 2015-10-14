@@ -19,7 +19,7 @@ source=(
   "https://github.com/DavidEGrayson/libconfuse/archive/david.zip"
 )
 
-sha256sums=('SKIP') # TODO: updpkgsums
+sha256sums=('f28a9c5ee2af32af9042e99f256a93b998aed841311e1be2b21c75fd3c8f303d')
 
 prepare() {
   # We can't use autogen.sh because it runs configure.
@@ -51,12 +51,13 @@ build() {
 
 check() {
   cd "${srcdir}/build-${MINGW_CHOST}"
-  # TODO: make check
+  make check
 }
 
 package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
+  cd "${srcdir}/lib${_realname}-david"
   install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }
