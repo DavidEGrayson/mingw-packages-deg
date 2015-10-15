@@ -33,8 +33,6 @@ build() {
     --enable-shared \
     --disable-examples \
 
-  # TODO: man pages
-
   make
 }
 
