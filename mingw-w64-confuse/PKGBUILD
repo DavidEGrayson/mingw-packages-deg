@@ -11,9 +11,10 @@ url="https://github.com/martinh/libconfuse"
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+depends=(
   "${MINGW_PACKAGE_PREFIX}-gettext"
 )
-depends=()  # TODO: run-time dependencies for gettext (libintl.dll)?
 options=('staticlibs' 'strip')
 source=(
   "https://github.com/martinh/libconfuse/releases/download/v2.8/confuse-2.8.tar.xz"
@@ -46,6 +47,8 @@ package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
+  # Note that the license also gets installed in share/doc/confuse along with
+  # other documentation.
   cd "${srcdir}/${_realname}-${pkgver}"
   install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
 }
