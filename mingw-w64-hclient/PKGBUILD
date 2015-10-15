@@ -5,16 +5,13 @@ pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
 provides="${MINGW_PACKAGE_PREFIX}-${_realname}"
 conflicts="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=35.818f6ee
+pkgver=37.efd8c0a
 pkgrel=1
 pkgdesc='Sample GUI for communicating with HIDs (mingw-w64)'
 arch=('any')
 url=''
 license=('custom')
-makedepends=(
-  "${MINGW_PACKAGE_PREFIX}-gcc"
-  'patch'
-)
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
 depends=()
 options=('strip')
 source=(
@@ -70,13 +67,13 @@ prepare() {
 
 build() {
   cd "${srcdir}"
-  mkdir -p "build-${MINGW_CHOST}/include"
+  rm -rf "build-${MINGW_CHOST}"
+  mkdir -p "build-${MINGW_CHOST}"
   cd "build-${MINGW_CHOST}"
 
   windres ../wds/hid/hclient/hclient.rc rc.so
 
   gcc -mwindows --std=c99 ${CFLAGS} ${LDFLAGS} \
-    -I/d/builds/mingw-packages-deg/include/ \
     ../wds/hid/hclient/*.c rc.so \
     -lsetupapi -lhid \
     -o hclient.exe
