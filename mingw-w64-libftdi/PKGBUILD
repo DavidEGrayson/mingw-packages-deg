@@ -13,10 +13,12 @@ makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
   "${MINGW_PACKAGE_PREFIX}-cmake"
   "${MINGW_PACKAGE_PREFIX}-boost"
+  "${MINGW_PACKAGE_PREFIX}-swig"
+  "${MINGW_PACKAGE_PREFIX}-python2"
 )
 depends=(
   "${MINGW_PACKAGE_PREFIX}-libusb"
-  # TODO: libConfuse
+  "${MINGW_PACKAGE_PREFIX}-confuse"
 )
 options=('staticlibs' 'strip')
 source=(
@@ -45,7 +47,7 @@ build() {
 
 check() {
   cd "${srcdir}/build-${MINGW_CHOST}"
-  make check
+  PATH=$PATH:"${srcdir}/build-${MINGW_CHOST}/src" make check
 }
 
 package() {
