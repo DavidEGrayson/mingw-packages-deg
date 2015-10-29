@@ -1,0 +1,12 @@
+diff -ur lynx2-8-8-orig/src/makefile.in lynx2-8-8/src/makefile.in
+--- lynx2-8-8-orig/src/makefile.in	2014-02-04 16:50:18.000000000 -0800
++++ lynx2-8-8/src/makefile.in	2015-10-28 20:06:34.433896900 -0700
+@@ -158,7 +158,7 @@
+ LYrcFile$o :		$(top_srcdir)/userdefs.h
+ 
+ LYIcon$o: LYIcon.rc
+-	$(WINDRES) -i LYIcon.rc -o LYIcon$o -O coff
++	$(WINDRES) -i $(top_srcdir}/LYIcon.rc -o LYIcon$o -O coff
+ 
+ CHRTR= chrtrans/
+ 

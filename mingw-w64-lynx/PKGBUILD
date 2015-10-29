@@ -1,0 +1,56 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=lynx
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=2.8.8
+pkgrel=1
+pkgdesc='The text web browser (mingw-w64)'
+arch=('any')
+url="https://github.com/bitcoin/${_realname}"
+license=('GPL2')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'git'
+  'automake'
+  'autoconf'
+  'libtool'
+  'pkgconfig'
+  'ca-certificates'
+)
+depends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+)
+options=('staticlibs' 'strip')
+source=(
+  "http://invisible-mirror.net/archives/lynx/tarballs/lynx${pkgver}rel.2.tar.bz2"
+  '01-windres-invoke.patch'
+)
+
+sha256sums=('6980e75cf0d677fd52c116e2e0dfd3884e360970c88c8356a114338500d5bee7'
+            '29ad722eb1c807583073dbaec1d08a20b406a30eb50a82e2fbbbfaf969a9ec00')
+
+prepare() {
+  cd "${srcdir}/${_realname}${pkgver//./-}"
+
+  patch -p1 -i ../01-windres-invoke.patch
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "..//${_realname}${pkgver//./-}/configure" \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST}
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${_realname}${pkgver//./-}"
+  install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+}
