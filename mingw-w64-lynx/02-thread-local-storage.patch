@@ -1,0 +1,11 @@
+--- lynx2-8-8-orig/src/LYUtils.c
++++ lynx2-8-8/src/LYUtils.c
+@@ -7860,7 +7860,7 @@
+     static char msg_buff[256];
+ 
+ #else
+-    __declspec(thread) static char msg_buff[256];
++    static __thread char msg_buff[256];
+ #endif
+     HMODULE hModule;
+     int i, msg_type;
