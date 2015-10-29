@@ -20,17 +20,20 @@ source=(
   "http://invisible-mirror.net/archives/lynx/tarballs/lynx${pkgver}rel.2.tar.bz2"
   '01-windres-invoke.patch'
   '02-thread-local-storage.patch'
+  '03-find-config-files.patch'
 )
 
 sha256sums=('6980e75cf0d677fd52c116e2e0dfd3884e360970c88c8356a114338500d5bee7'
             '1e7c32564dff61301600403e48f611f72e34b25ff927320fa56998460aef46e9'
-            'fa889985242ab897f2b2dd1cf533735fec8d3fa8e2f1c34f74a34feb8915e546')
+            'fa889985242ab897f2b2dd1cf533735fec8d3fa8e2f1c34f74a34feb8915e546'
+            '536467a856cbb664894c5efc413269c0215e1c8c1a9c362d735483d550f8c620')
 
 prepare() {
   cd "${srcdir}/${_realname}${pkgver//./-}"
 
   patch -p1 -i ../01-windres-invoke.patch
   patch -p1 -i ../02-thread-local-storage.patch
+  patch -p1 -i ../03-find-config-files.patch
 }
 
 build() {
@@ -39,7 +42,7 @@ build() {
   cd "${srcdir}/build-${MINGW_CHOST}"
 
   # _GNU_SOURCE gives us access to vasprintf
-  CFLAGS="${CLFAGS} -D_GNU_SOURCE" \
+  CFLAGS="${CLFAGS} -D_GNU_SOURCE -DUSE_PROGRAM_DIR" \
   "..//${_realname}${pkgver//./-}/configure" \
     --prefix=${MINGW_PREFIX} \
     --build=${MINGW_CHOST} \
