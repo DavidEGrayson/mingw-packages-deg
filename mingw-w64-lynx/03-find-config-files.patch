@@ -1,0 +1,17 @@
+diff -ur lynx2-8-8-orig/src/LYMain.c lynx2-8-8/src/LYMain.c
+--- lynx2-8-8-orig/src/LYMain.c	2014-02-14 05:00:16.000000000 -0800
++++ lynx2-8-8/src/LYMain.c	2015-10-28 23:02:07.482686800 -0700
+@@ -1486,6 +1486,13 @@
+ 	    lynx_cfg_file = NULL;
+ 	}
+     }
++    if (!lynx_cfg_file) {
++	HTSprintf0(&lynx_cfg_file, "%s\\..\\etc\\lynx.cfg", program_dir);
++	if (!LYCanReadFile(lynx_cfg_file)) {
++	    FREE(lynx_cfg_file);
++	    lynx_cfg_file = NULL;
++	}
++    }
+ #endif
+ 
+     /*
