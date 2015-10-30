@@ -14,19 +14,14 @@
  #endif
  
      /*
---- lynx-orig/src/LYUtils.c
-+++ lynx/src/LYUtils.c
-@@ -2895,6 +2895,13 @@
- 		    LYTildeExpand(&result, TRUE);
- 		    if (!LYCanReadFile(result)) {
- 			FREE(result);
-+                        StrAllocCopy(result, program_dir);
-+                        StrAllocCat(result, "\\..\\etc\\");
-+                        StrAllocCat(result, nominal);  printf("trying -%s-\n", result);
-+                        if (!LYCanReadFile(result))
-+                        {
-+                            FREE(result);
-+                        }
- 		    }
- 		}
- #endif
+--- lynx-orig/src/LYStyle.c
++++ lynx/src/LYStyle.c
+@@ -922,7 +922,7 @@
+ 	       (cp = LYGetEnv("lynx_lss")) != NULL) {
+ 	lynx_lss_file = find_lss_file(cp);
+     } else {
+-	lynx_lss_file = find_lss_file(cp = DeConst(LYNX_LSS_FILE));
++	HTSprintf0(&lynx_lss_file, "%s\\..\\etc\\lynx.lss", program_dir);
+     }
+     CTRACE1((tfp, "init_color_styles(%s)\n", NonNull(lynx_lss_file)));
+ 
