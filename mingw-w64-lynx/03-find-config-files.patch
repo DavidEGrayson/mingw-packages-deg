@@ -1,6 +1,5 @@
-diff -ur lynx2-8-8-orig/src/LYMain.c lynx2-8-8/src/LYMain.c
---- lynx2-8-8-orig/src/LYMain.c	2014-02-14 05:00:16.000000000 -0800
-+++ lynx2-8-8/src/LYMain.c	2015-10-28 23:02:07.482686800 -0700
+--- lynx2-8-8-orig/src/LYMain.c
++++ lynx2-8-8/src/LYMain.c
 @@ -1486,6 +1486,13 @@
  	    lynx_cfg_file = NULL;
  	}
@@ -15,3 +14,19 @@ diff -ur lynx2-8-8-orig/src/LYMain.c lynx2-8-8/src/LYMain.c
  #endif
  
      /*
+--- lynx-orig/src/LYUtils.c
++++ lynx/src/LYUtils.c
+@@ -2895,6 +2895,13 @@
+ 		    LYTildeExpand(&result, TRUE);
+ 		    if (!LYCanReadFile(result)) {
+ 			FREE(result);
++                        StrAllocCopy(result, program_dir);
++                        StrAllocCat(result, "\\..\\etc\\");
++                        StrAllocCat(result, nominal);  printf("trying -%s-\n", result);
++                        if (!LYCanReadFile(result))
++                        {
++                            FREE(result);
++                        }
+ 		    }
+ 		}
+ #endif
