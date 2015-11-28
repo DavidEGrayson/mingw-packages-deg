@@ -1,6 +1,15 @@
 diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
 --- avrdude-6.2-orig/configure.ac	2015-11-28 09:45:32.828765400 -0800
-+++ avrdude-6.2/configure.ac	2015-11-28 10:03:42.067666900 -0800
++++ avrdude-6.2/configure.ac	2015-11-28 10:14:43.941361100 -0800
+@@ -34,7 +34,7 @@
+ AC_CONFIG_HEADERS(ac_cfg.h)
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+-LT_INIT()
++LT_INIT([win32-dll])
+ 
+ # Checks for programs.
+ AC_PROG_CC
 @@ -183,7 +183,7 @@
  # Checks for header files.
  AC_CHECK_HEADERS([limits.h stdlib.h string.h])
@@ -24,7 +33,7 @@ diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
  		fi
 diff -u -r avrdude-6.2-orig/Makefile.am avrdude-6.2/Makefile.am
 --- avrdude-6.2-orig/Makefile.am	2015-11-28 09:45:32.758379800 -0800
-+++ avrdude-6.2/Makefile.am	2015-11-28 10:06:23.478915200 -0800
++++ avrdude-6.2/Makefile.am	2015-11-28 10:28:26.752297500 -0800
 @@ -138,7 +138,6 @@
  	linuxgpio.h \
  	linux_ppdev.h \
@@ -33,6 +42,15 @@ diff -u -r avrdude-6.2-orig/Makefile.am avrdude-6.2/Makefile.am
  	par.c \
  	par.h \
  	pgm.c \
+@@ -176,7 +175,7 @@
+ 	wiring.h \
+ 	wiring.c
+ libavrdude_la_SOURCES = $(libavrdude_a_SOURCES)
+-libavrdude_la_LDFLAGS = -version-info 1:0
++libavrdude_la_LDFLAGS = -no-undefined -version-info 1:0
+ 
+ include_HEADERS = libavrdude.h
+ 
 diff -u -r avrdude-6.2-orig/pickit2.c avrdude-6.2/pickit2.c
 --- avrdude-6.2-orig/pickit2.c	2015-11-28 09:45:32.674308700 -0800
 +++ avrdude-6.2/pickit2.c	2015-11-28 10:04:30.913297900 -0800
@@ -62,6 +80,27 @@ diff -u -r avrdude-6.2-orig/ser_avrdoper.c avrdude-6.2/ser_avrdoper.c
  
  #ifdef USB_DEBUG
  #define DEBUG_PRINT(arg)    printf arg
+diff -u -r avrdude-6.2-orig/serbb_win32.c avrdude-6.2/serbb_win32.c
+--- avrdude-6.2-orig/serbb_win32.c	2015-11-28 09:45:32.912837800 -0800
++++ avrdude-6.2/serbb_win32.c	2015-11-28 10:38:03.674831400 -0800
+@@ -309,7 +309,7 @@
+                 return -1;
+ 	}
+         avrdude_message(MSG_DEBUG, "%s: ser_open(): opened comm port \"%s\", handle 0x%x\n",
+-                        progname, port, (int)hComPort);
++                        progname, port, hComPort);
+ 
+         pgm->fd.pfd = (void *)hComPort;
+ 
+@@ -327,7 +327,7 @@
+ 		CloseHandle (hComPort);
+ 	}
+         avrdude_message(MSG_DEBUG, "%s: ser_close(): closed comm port handle 0x%x\n",
+-                                progname, (int)hComPort);
++                                progname, hComPort);
+ 
+ 	hComPort = INVALID_HANDLE_VALUE;
+ }
 diff -u -r avrdude-6.2-orig/windows/Makefile.am avrdude-6.2/windows/Makefile.am
 --- avrdude-6.2-orig/windows/Makefile.am	2015-11-28 09:45:32.698747700 -0800
 +++ avrdude-6.2/windows/Makefile.am	2015-11-28 10:01:45.066756000 -0800
