@@ -27,10 +27,6 @@ source=(
 
 sha256sums=('a6ea795c829219015eb372b03008351cee3fb39f684bff3bf8a4620b558488d6')
 
-prepare() {  # TODO: remove
-  cd "${srcdir}/${_realname}1-${pkgver}"
-}
-
 build() {
   rm -rf "${srcdir}/build-${MINGW_CHOST}"
   mkdir -p "${srcdir}/build-${MINGW_CHOST}"
