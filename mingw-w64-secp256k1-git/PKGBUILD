@@ -11,7 +11,7 @@ url="https://github.com/bitcoin/${_realname}"
 license=('custom')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
-  '${MINGW_PACKAGE_PREFIX}-openssl'
+  "${MINGW_PACKAGE_PREFIX}-openssl"
   'git'
   'automake'
   'autoconf'
