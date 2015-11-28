@@ -5,10 +5,10 @@ pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=1.2
 pkgrel=1
-pkgdesc='Library to talk to FTDI chips (mingw-w64)'
+pkgdesc='Library to talk to FTDI chips, with Python 2 bindings (mingw-w64)'
 arch=('any')
 url="https://www.intra2net.com/en/developer/libftdi/"
-license=('custom')
+license=('LGPL', 'GPL')
 makedepends=(
   "${MINGW_PACKAGE_PREFIX}-gcc"
   "${MINGW_PACKAGE_PREFIX}-cmake"
@@ -32,6 +32,7 @@ prepare() {  # TODO: remove
 }
 
 build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
   mkdir -p "${srcdir}/build-${MINGW_CHOST}"
   cd "${srcdir}/build-${MINGW_CHOST}"
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
@@ -40,6 +41,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DEXAMPLES=Off \
+    -DPYTHON_BINDINGS=On \
     "../${_realname}1-${pkgver}/"
 
   make
@@ -54,6 +56,10 @@ package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
-  #cd "${srcdir}/${_realname}"
-  #install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  cd "${srcdir}/${_realname}1-${pkgver}"
+  mkdir -p "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"
+  cp COPYING* "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"
+
+  sed -i "s;$(cygpath -m /);/;" \
+      "${pkgdir}${MINGW_PREFIX}/lib/cmake/${_realname}1"/*.cmake
 }
