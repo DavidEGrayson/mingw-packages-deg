@@ -1,5 +1,5 @@
 diff --git a/src/driver/pe_driver_ctx.c b/src/driver/pe_driver_ctx.c
-index 97ff3fa..45f4bd2 100644
+index 97ff3fa..7d81109 100644
 --- a/src/driver/pe_driver_ctx.c
 +++ b/src/driver/pe_driver_ctx.c
 @@ -174,8 +174,8 @@ int pe_get_driver_ctx(
@@ -26,9 +26,52 @@ index 97ff3fa..45f4bd2 100644
  
  	*pctx = ctx;
  	return PERK_OK;
+@@ -203,9 +203,6 @@ int pe_get_driver_ctx(
+ 
+ static void pe_driver_close_fds(struct pe_common_ctx * cctx)
+ {
+-	if (cctx->status && cctx->output)
+-		unlinkat(cctx->fddst,cctx->output,0);
+-
+ 	if (cctx->fdout >= 0)
+ 		close(cctx->fdout);
+ }
+diff --git a/src/driver/pe_unit_ctx.c b/src/driver/pe_unit_ctx.c
+index bed99c6..1e998cb 100644
+--- a/src/driver/pe_unit_ctx.c
++++ b/src/driver/pe_unit_ctx.c
+@@ -1,7 +1,6 @@
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/mman.h>
+ #include <perk/perk.h>
+ 
+ static int pe_free_unit_ctx_impl(struct pe_unit_ctx * ctx, int status)
 diff --git a/src/internal/endian.h b/src/internal/endian.h
 index e69de29..6f70f09 100644
 --- a/src/internal/endian.h
 +++ b/src/internal/endian.h
 @@ -0,0 +1 @@
 +#pragma once
+diff --git a/sysinfo/host/host.sh b/sysinfo/host/host.sh
+index 5d963c9..43b9460 100755
+--- a/sysinfo/host/host.sh
++++ b/sysinfo/host/host.sh
+@@ -26,6 +26,8 @@ host_endian_h()
+ 	mb_header='endian.h'
+ 	rm -f "$mb_hdrdir"/$mb_header
+ 
++  echo "hey: $mb_cflags"
++
+ 	# portable
+ 	printf "#include <$mb_header>" | $mb_compiler $mb_cflags \
+ 		-E - > /dev/null 2>/dev/null \
+@@ -61,6 +63,7 @@ for arg ; do
+ 			;;
+ 		--cflags=*)
+ 			mb_cflags=${arg#*=}
++      echo "hey got the arg: $mb_cflags"
+ 			;;
+ 		*)
+ 			error_msg ${arg#}: "unsupported config argument."
