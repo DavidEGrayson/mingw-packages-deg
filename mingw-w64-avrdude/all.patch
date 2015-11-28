@@ -1,0 +1,80 @@
+diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
+--- avrdude-6.2-orig/configure.ac	2015-11-28 09:45:32.828765400 -0800
++++ avrdude-6.2/configure.ac	2015-11-28 10:03:42.067666900 -0800
+@@ -183,7 +183,7 @@
+ # Checks for header files.
+ AC_CHECK_HEADERS([limits.h stdlib.h string.h])
+ AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h])
+-AC_CHECK_HEADERS([ddk/hidsdi.h],,,[#include <windows.h>
++AC_CHECK_HEADERS([hidsdi.h],,,[#include <windows.h>
+ #include <setupapi.h>])
+ 
+ 
+@@ -202,9 +202,9 @@
+ case $target in
+         *-*-mingw32* | *-*-cygwin* | *-*-windows*)
+ 		LIBHID="-lhid -lsetupapi"
+-		if test $ac_cv_header_ddk_hidsdi_h = yes
++		if test x$ac_cv_header_hidsdi_h = xyes
+ 		then
+-			HIDINCLUDE="#include <ddk/hidsdi.h>"
++			HIDINCLUDE="#include <hidsdi.h>"
+ 		else
+ 			HIDINCLUDE="#include \"my_ddk_hidsdi.h\""
+ 		fi
+diff -u -r avrdude-6.2-orig/Makefile.am avrdude-6.2/Makefile.am
+--- avrdude-6.2-orig/Makefile.am	2015-11-28 09:45:32.758379800 -0800
++++ avrdude-6.2/Makefile.am	2015-11-28 10:06:23.478915200 -0800
+@@ -138,7 +138,6 @@
+ 	linuxgpio.h \
+ 	linux_ppdev.h \
+ 	lists.c \
+-	my_ddk_hidsdi.h \
+ 	par.c \
+ 	par.h \
+ 	pgm.c \
+diff -u -r avrdude-6.2-orig/pickit2.c avrdude-6.2/pickit2.c
+--- avrdude-6.2-orig/pickit2.c	2015-11-28 09:45:32.674308700 -0800
++++ avrdude-6.2/pickit2.c	2015-11-28 10:04:30.913297900 -0800
+@@ -60,6 +60,8 @@
+ #include <windows.h>
+ #if defined(HAVE_DDK_HIDSDI_H)
+ #  include <ddk/hidsdi.h>
++#elif defined(HAVE_HIDSDI_H)
++#  include <hidsdi.h>
+ #else
+ #  include "my_ddk_hidsdi.h"
+ #endif
+diff -u -r avrdude-6.2-orig/ser_avrdoper.c avrdude-6.2/ser_avrdoper.c
+--- avrdude-6.2-orig/ser_avrdoper.c	2015-11-28 09:45:32.851250500 -0800
++++ avrdude-6.2/ser_avrdoper.c	2015-11-28 10:09:24.206699100 -0800
+@@ -71,10 +71,12 @@
+ 
+ #if defined(HAVE_DDK_HIDSDI_H)
+ #  include <ddk/hidsdi.h>
++#elif defined (HAVE_HIDSDI_H)
++#  include <hidsdi.h>
+ #else
+ #  include "my_ddk_hidsdi.h"
+ #endif
+-#include <ddk/hidpi.h>
++#include <hidpi.h>
+ 
+ #ifdef USB_DEBUG
+ #define DEBUG_PRINT(arg)    printf arg
+diff -u -r avrdude-6.2-orig/windows/Makefile.am avrdude-6.2/windows/Makefile.am
+--- avrdude-6.2-orig/windows/Makefile.am	2015-11-28 09:45:32.698747700 -0800
++++ avrdude-6.2/windows/Makefile.am	2015-11-28 10:01:45.066756000 -0800
+@@ -24,11 +24,7 @@
+ # This Makefile will only be used on windows based systems.
+ #
+ 
+-local_install_list = \
+-	giveio.sys \
+-	install_giveio.bat \
+-	remove_giveio.bat \
+-	status_giveio.bat
++local_install_list =
+ 
+ EXTRA_DIST   = \
+ 	giveio.c \

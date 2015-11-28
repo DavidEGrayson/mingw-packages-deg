@@ -23,9 +23,28 @@ depends=(
 options=('staticlibs' 'strip')
 source=(
   "http://download.savannah.gnu.org/releases/avrdude/avrdude-${pkgver}.tar.gz"
+  'all.patch'
 )
 
-sha256sums=('e65f833493b7d63a4436c7056694a0f04ae5b437b72cc084e32c58bc543b0f91')
+sha256sums=(
+  'e65f833493b7d63a4436c7056694a0f04ae5b437b72cc084e32c58bc543b0f91'
+  'SKIP'
+)
+
+prepare()
+{
+  cd "${srcdir}/${_realname}-${pkgver}"
+
+  # Delete binaries.
+  rm windows/giveio.sys
+
+  # Let's use mingw-w64's hidsdi.h instead of AVRDUDE's.
+  rm my_ddk_hidsdi.h
+
+  patch -p1 -i ../all.patch
+
+  ./bootstrap
+}
 
 build() {
   rm -rf "${srcdir}/build-${MINGW_CHOST}"
