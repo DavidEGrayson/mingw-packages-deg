@@ -1,0 +1,58 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=perk
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}-git"
+pkgver=r78.f82c537
+pkgrel=1
+pkgdesc="Portable Executable (PE) Resource Kit (mingw-w64)"
+arch=('any')
+url="https://github.com/bitcoin/${_realname}"
+license=('custom')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  'git'
+)
+depends=("${MINGW_PACKAGE_PREFIX}-gmp")
+options=('staticlibs' 'strip')
+source=(
+  "git://midipix.org/perk"
+  'all.patch'
+)
+
+sha256sums=('SKIP'
+           'SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_realname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "${srcdir}/${_realname}"
+  patch -p1 -i ../all.patch
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "../${_realname}/configure" \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST}
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/${_realname}"
+  install -Dm644 COPYING.perk "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING.perk"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="$pkgdir" install
+}

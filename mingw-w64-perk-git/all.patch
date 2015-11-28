@@ -1,0 +1,34 @@
+diff --git a/src/driver/pe_driver_ctx.c b/src/driver/pe_driver_ctx.c
+index 97ff3fa..45f4bd2 100644
+--- a/src/driver/pe_driver_ctx.c
++++ b/src/driver/pe_driver_ctx.c
+@@ -174,8 +174,8 @@ int pe_get_driver_ctx(
+ 	}
+ 
+ 	if (output && ((fdout = open(output,
+-			O_CREAT|O_TRUNC|O_WRONLY|O_NOCTTY|O_NOFOLLOW,
+-			S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) < 0))
++			O_CREAT|O_TRUNC|O_WRONLY,
++			0)) < 0))
+ 		return pe_get_driver_ctx_fail(meta);
+ 
+ 	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)) && output)
+@@ -193,9 +193,9 @@ int pe_get_driver_ctx(
+ 	ctx->cctx.fdin		= -1;
+ 	ctx->cctx.fderr		= -1;
+ 	ctx->cctx.fdlog		= -1;
+-	ctx->cctx.fdsrc		= AT_FDCWD;
+-	ctx->cctx.fddst		= AT_FDCWD;
+-	ctx->cctx.fdtmp		= AT_FDCWD;
++	ctx->cctx.fdsrc		= -100;
++	ctx->cctx.fddst		= -100;
++	ctx->cctx.fdtmp		= -100;
+ 
+ 	*pctx = ctx;
+ 	return PERK_OK;
+diff --git a/src/internal/endian.h b/src/internal/endian.h
+index e69de29..6f70f09 100644
+--- a/src/internal/endian.h
++++ b/src/internal/endian.h
+@@ -0,0 +1 @@
++#pragma once
