@@ -1,6 +1,6 @@
 diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
 --- avrdude-6.2-orig/configure.ac	2015-11-28 09:45:32.828765400 -0800
-+++ avrdude-6.2/configure.ac	2015-11-28 10:14:43.941361100 -0800
++++ avrdude-6.2/configure.ac	2015-11-29 12:31:19.856337900 -0800
 @@ -34,7 +34,7 @@
  AC_CONFIG_HEADERS(ac_cfg.h)
  AC_CONFIG_MACRO_DIR([m4])
@@ -10,23 +10,25 @@ diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
  
  # Checks for programs.
  AC_PROG_CC
-@@ -183,7 +183,7 @@
- # Checks for header files.
- AC_CHECK_HEADERS([limits.h stdlib.h string.h])
+@@ -185,6 +185,8 @@
  AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h])
--AC_CHECK_HEADERS([ddk/hidsdi.h],,,[#include <windows.h>
-+AC_CHECK_HEADERS([hidsdi.h],,,[#include <windows.h>
+ AC_CHECK_HEADERS([ddk/hidsdi.h],,,[#include <windows.h>
  #include <setupapi.h>])
++AC_CHECK_HEADERS([hidsdi.h],,,[#include <windows.h>
++#include <setupapi.h>])
  
  
-@@ -202,9 +202,9 @@
+ # Checks for typedefs, structures, and compiler characteristics.
+@@ -202,9 +204,12 @@
  case $target in
          *-*-mingw32* | *-*-cygwin* | *-*-windows*)
  		LIBHID="-lhid -lsetupapi"
 -		if test $ac_cv_header_ddk_hidsdi_h = yes
-+		if test x$ac_cv_header_hidsdi_h = xyes
++		if test x$ac_cv_header_ddk_hidsdi_h = xyes
  		then
--			HIDINCLUDE="#include <ddk/hidsdi.h>"
+ 			HIDINCLUDE="#include <ddk/hidsdi.h>"
++		elif test x$ac_cv_header_hidsdi_h = xyes
++		then
 +			HIDINCLUDE="#include <hidsdi.h>"
  		else
  			HIDINCLUDE="#include \"my_ddk_hidsdi.h\""
