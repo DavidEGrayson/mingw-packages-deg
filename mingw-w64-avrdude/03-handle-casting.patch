@@ -1,20 +1,24 @@
-Fixes a valid compiler warning about casting a pointer to a smaller integer type.
+Proper printing of 64-bit HANDLE pointers.
 --- avrdude-6.2-orig/serbb_win32.c
 +++ avrdude-6.2/serbb_win32.c
-@@ -309,7 +309,7 @@
+@@ -308,8 +308,8 @@
+                         progname, port);
                  return -1;
  	}
-         avrdude_message(MSG_DEBUG, "%s: ser_open(): opened comm port \"%s\", handle 0x%x\n",
+-        avrdude_message(MSG_DEBUG, "%s: ser_open(): opened comm port \"%s\", handle 0x%x\n",
 -                        progname, port, (int)hComPort);
++        avrdude_message(MSG_DEBUG, "%s: ser_open(): opened comm port \"%s\", handle 0x%p\n",
 +                        progname, port, hComPort);
  
          pgm->fd.pfd = (void *)hComPort;
  
-@@ -327,7 +327,7 @@
+@@ -326,8 +326,8 @@
+ 		pgm->setpin(pgm, PIN_AVR_RESET, 1);
  		CloseHandle (hComPort);
  	}
-         avrdude_message(MSG_DEBUG, "%s: ser_close(): closed comm port handle 0x%x\n",
+-        avrdude_message(MSG_DEBUG, "%s: ser_close(): closed comm port handle 0x%x\n",
 -                                progname, (int)hComPort);
++        avrdude_message(MSG_DEBUG, "%s: ser_close(): closed comm port handle 0x%p\n",
 +                                progname, hComPort);
  
  	hComPort = INVALID_HANDLE_VALUE;
