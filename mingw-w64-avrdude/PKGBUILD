@@ -67,11 +67,17 @@ package() {
   cd "${srcdir}/build-${MINGW_CHOST}"
   make DESTDIR="${pkgdir}" install
 
+  cd "${pkgdir}${MINGW_PREFIX}"
+
   # Remove loaddrv.exe because we aren't distributing any drivers one could use
   # with it and driver signing requirements in modern versions of Windows mean
   # it is unlikely to work (it only claims to support Windows NT/2000/XP).
   # Also, with a generic name like loaddrv, it could cause a name collision.
-  rm "${pkgdir}${MINGW_PREFIX}/bin/loaddrv.exe"
+  rm bin/loaddrv.exe
+
+  # As we can see from confwin.c, AVRDUDE searches for avrdude.conf
+  # using the PATH; it does not find it in /etc.
+  mv etc/avrdude.conf bin
 
   cd "${srcdir}/${_realname}-${pkgver}"
   install -D COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
