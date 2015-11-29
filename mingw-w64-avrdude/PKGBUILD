@@ -25,7 +25,7 @@ source=(
   "http://download.savannah.gnu.org/releases/avrdude/avrdude-${pkgver}.tar.gz"
   '01-libtool.patch'
   '02-ddk-headers.patch'
-  '03-handle-casting.patch'
+  '03-handle-printing.patch'
   '04-no-giveio.patch'
 )
 
@@ -47,7 +47,7 @@ prepare()
 
   patch -p1 -i ../01-libtool.patch
   patch -p1 -i ../02-ddk-headers.patch
-  patch -p1 -i ../03-handle-casting.patch
+  patch -p1 -i ../03-handle-printing.patch
   patch -p1 -i ../04-no-giveio.patch
 
   ./bootstrap
