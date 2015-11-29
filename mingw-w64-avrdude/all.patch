@@ -1,6 +1,6 @@
 diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
 --- avrdude-6.2-orig/configure.ac	2015-11-28 09:45:32.828765400 -0800
-+++ avrdude-6.2/configure.ac	2015-11-29 12:31:19.856337900 -0800
++++ avrdude-6.2/configure.ac	2015-11-29 12:35:31.924745200 -0800
 @@ -34,7 +34,7 @@
  AC_CONFIG_HEADERS(ac_cfg.h)
  AC_CONFIG_MACRO_DIR([m4])
@@ -10,16 +10,20 @@ diff -u -r avrdude-6.2-orig/configure.ac avrdude-6.2/configure.ac
  
  # Checks for programs.
  AC_PROG_CC
-@@ -185,6 +185,8 @@
+@@ -185,6 +185,12 @@
  AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h])
  AC_CHECK_HEADERS([ddk/hidsdi.h],,,[#include <windows.h>
  #include <setupapi.h>])
 +AC_CHECK_HEADERS([hidsdi.h],,,[#include <windows.h>
 +#include <setupapi.h>])
++AC_CHECK_HEADERS([ddk/hidpi.h],,,[#include <windows.h>
++#include <setupapi.h>])
++AC_CHECK_HEADERS([hidpi.h],,,[#include <windows.h>
++#include <setupapi.h>])
  
  
  # Checks for typedefs, structures, and compiler characteristics.
-@@ -202,9 +204,12 @@
+@@ -202,9 +208,12 @@
  case $target in
          *-*-mingw32* | *-*-cygwin* | *-*-windows*)
  		LIBHID="-lhid -lsetupapi"
@@ -67,8 +71,8 @@ diff -u -r avrdude-6.2-orig/pickit2.c avrdude-6.2/pickit2.c
  #endif
 diff -u -r avrdude-6.2-orig/ser_avrdoper.c avrdude-6.2/ser_avrdoper.c
 --- avrdude-6.2-orig/ser_avrdoper.c	2015-11-28 09:45:32.851250500 -0800
-+++ avrdude-6.2/ser_avrdoper.c	2015-11-28 10:09:24.206699100 -0800
-@@ -71,10 +71,12 @@
++++ avrdude-6.2/ser_avrdoper.c	2015-11-29 12:36:50.590185200 -0800
+@@ -71,10 +71,19 @@
  
  #if defined(HAVE_DDK_HIDSDI_H)
  #  include <ddk/hidsdi.h>
@@ -78,7 +82,14 @@ diff -u -r avrdude-6.2-orig/ser_avrdoper.c avrdude-6.2/ser_avrdoper.c
  #  include "my_ddk_hidsdi.h"
  #endif
 -#include <ddk/hidpi.h>
-+#include <hidpi.h>
++
++#if defined (HAVE_DDK_HIDPI_H)
++#  include <ddk/hidpi.h>
++#elif defined (HAVE_HIDPI_H)
++#  include <hidpi.h>
++#else
++#error No hidpi.h.
++#endif
  
  #ifdef USB_DEBUG
  #define DEBUG_PRINT(arg)    printf arg
