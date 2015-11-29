@@ -2,20 +2,16 @@ mingw-w64 keeps headers like hidsdi.h and hidpi.h at the top level,
 not inside the "ddk" folder.
 --- avrdude-6.2-orig/configure.ac
 +++ avrdude-6.2/configure.ac
-@@ -185,6 +185,12 @@
+@@ -185,6 +185,8 @@
  AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h])
  AC_CHECK_HEADERS([ddk/hidsdi.h],,,[#include <windows.h>
  #include <setupapi.h>])
 +AC_CHECK_HEADERS([hidsdi.h],,,[#include <windows.h>
 +#include <setupapi.h>])
-+AC_CHECK_HEADERS([ddk/hidpi.h],,,[#include <windows.h>
-+#include <setupapi.h>])
-+AC_CHECK_HEADERS([hidpi.h],,,[#include <windows.h>
-+#include <setupapi.h>])
  
  
  # Checks for typedefs, structures, and compiler characteristics.
-@@ -202,9 +208,12 @@
+@@ -202,9 +204,12 @@
  case $target in
          *-*-mingw32* | *-*-cygwin* | *-*-windows*)
  		LIBHID="-lhid -lsetupapi"
@@ -42,24 +38,18 @@ not inside the "ddk" folder.
  #endif
 --- avrdude-6.2-orig/ser_avrdoper.c
 +++ avrdude-6.2/ser_avrdoper.c
-@@ -71,10 +71,19 @@
+@@ -71,10 +71,13 @@
  
  #if defined(HAVE_DDK_HIDSDI_H)
  #  include <ddk/hidsdi.h>
++#  include <ddk/hidpi.h>
 +#elif defined (HAVE_HIDSDI_H)
 +#  include <hidsdi.h>
++#  include <hidpi.h>
  #else
  #  include "my_ddk_hidsdi.h"
  #endif
 -#include <ddk/hidpi.h>
-+
-+#if defined (HAVE_DDK_HIDPI_H)
-+#  include <ddk/hidpi.h>
-+#elif defined (HAVE_HIDPI_H)
-+#  include <hidpi.h>
-+#else
-+#error No hidpi.h.
-+#endif
  
  #ifdef USB_DEBUG
  #define DEBUG_PRINT(arg)    printf arg

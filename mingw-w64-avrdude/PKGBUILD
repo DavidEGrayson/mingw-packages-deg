@@ -30,10 +30,10 @@ source=(
 )
 
 sha256sums=('e65f833493b7d63a4436c7056694a0f04ae5b437b72cc084e32c58bc543b0f91'
-            '77c2e7d3dbdf4894cfb07cabacda7e08f9bb3c835f77717a74b8c918e7802dba'
-            '9ea1c88b60ee2a8e1160660ed193a8fa2d1054be901d344f867f464921b2deb7'
-            '79f9d9ab0692ce653b1bcf93664c5e545602db04dab71f95ffeb119b59139ac3'
-            '0cc897deafe4f5df182b187b9b87ea57a15d1bc829e514a2ca27d409bc615653')
+            'fe37f4fb2168afa03b33d346f2810088cee58839dfcddf3ef9d33666b75b9eb4'
+            '5cd074baad5edfdf1a67f2fa65c96f13cd7d8f5c942377af13d597295caaa40f'
+            'b2977847d7007598146351372aee0887d3cea7465120491c49f62912b5a5285b'
+            '473f2dfd0a3e44fab17be9dfe78d3a2eaba81f2ba58bc5c4ffa47f291c217fcb')
 
 prepare()
 {
@@ -45,7 +45,10 @@ prepare()
   # Let's use mingw-w64's hidsdi.h instead of AVRDUDE's.
   rm my_ddk_hidsdi.h
 
-  patch -p1 -i ../all.patch
+  patch -p1 -i ../01-libtool.patch
+  patch -p1 -i ../02-ddk-headers.patch
+  patch -p1 -i ../03-handle-casting.patch
+  patch -p1 -i ../04-no-giveio.patch
 
   ./bootstrap
 }
