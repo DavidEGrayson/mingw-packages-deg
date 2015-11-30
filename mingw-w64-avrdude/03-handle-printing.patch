@@ -1,4 +1,3 @@
-Proper printing of 64-bit HANDLE pointers.
 --- avrdude-6.2-orig/serbb_win32.c
 +++ avrdude-6.2/serbb_win32.c
 @@ -308,8 +308,8 @@

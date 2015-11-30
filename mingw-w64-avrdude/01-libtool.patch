@@ -1,5 +1,3 @@
-Fixes a warning from libtool.
-However, a DLL still does not generated.
 --- avrdude-6.2-orig/configure.ac
 +++ avrdude-6.2/configure.ac
 @@ -34,7 +34,7 @@

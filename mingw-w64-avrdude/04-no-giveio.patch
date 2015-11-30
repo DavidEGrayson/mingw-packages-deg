@@ -1,4 +1,3 @@
-Don't install giveio.sys or the batch scripts associated with it.
 --- avrdude-6.2-orig/windows/Makefile.am
 +++ avrdude-6.2/windows/Makefile.am
 @@ -24,11 +24,7 @@

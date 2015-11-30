@@ -1,5 +1,3 @@
-mingw-w64 keeps headers like hidsdi.h and hidpi.h at the top level,
-not inside the "ddk" folder.
 --- avrdude-6.2-orig/configure.ac
 +++ avrdude-6.2/configure.ac
 @@ -185,6 +185,8 @@
