@@ -68,6 +68,19 @@ diff -u -r libmill-1.2-orig/ip.c libmill-1.2/ip.c
      return addr;
  #else
      if(errno == 0)
+diff -u -r libmill-1.2-orig/poller.c libmill-1.2/poller.c
+--- libmill-1.2-orig/poller.c	2015-12-05 11:46:22.935242900 -0800
++++ libmill-1.2/poller.c	2015-12-05 12:36:09.494170000 -0800
+@@ -162,7 +162,8 @@
+ #include "epoll.inc"
+ #elif defined BSD
+ #include "kqueue.inc"
++#elif defined _WIN32
++// TODO: polling for Windows
+ #else
+ #include "poll.inc"
+ #endif
+-
 diff -u -r libmill-1.2-orig/utils.h libmill-1.2/utils.h
 --- libmill-1.2-orig/utils.h	2015-12-05 11:46:22.935242900 -0800
 +++ libmill-1.2/utils.h	2015-12-05 11:51:20.047750400 -0800
