@@ -1,0 +1,47 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=libmill
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.2
+pkgrel=1
+pkgdesc="A library that introduces Go-style concurrency to C (mingw-w64)"
+arch=('any')
+license=('MIT')
+url="http://libmill.org/"
+depends=()
+makedepends=()
+options=('staticlibs' 'strip')
+source=("http://libmill.org/libmill-${pkgver}.tar.gz" all.patch)
+sha256sums=('ab1d2098cdc5ef57366f14752e2685f3da84781f16da58de24b956d26c55f3cd' SKIP)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -p1 -i ../all.patch
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}"
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd ${srcdir}/${_realname}-${pkgver}
+  make install DESTDIR="${pkgdir}"
+  pushd contrib/minizip > /dev/null
+  make install DESTDIR="${pkgdir}"
+  popd > /dev/null
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+}
