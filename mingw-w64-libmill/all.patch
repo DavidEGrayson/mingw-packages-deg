@@ -81,6 +81,36 @@ diff -u -r libmill-1.2-orig/poller.c libmill-1.2/poller.c
  #include "poll.inc"
  #endif
 -
+diff -u -r libmill-1.2-orig/stack.c libmill-1.2/stack.c
+--- libmill-1.2-orig/stack.c	2015-12-05 11:46:23.013370400 -0800
++++ libmill-1.2/stack.c	2015-12-05 12:45:07.387412400 -0800
+@@ -27,7 +27,12 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <unistd.h>
++
++#if defined _WIN32
++#include <windows.h>
++#else
+ #include <sys/mman.h>
++#endif
+ 
+ #include "slist.h"
+ #include "stack.h"
+@@ -38,7 +43,13 @@
+     static long pgsz = 0;
+     if(mill_fast(pgsz))
+         return (size_t)pgsz;
++    #if defined _WIN32
++    SYSTEM_INFO si;
++    GetSystemInfo(&si);
++    pgsz = si.dwPageSize;
++    #else
+     pgsz = sysconf(_SC_PAGE_SIZE);
++    #endif
+     mill_assert(pgsz > 0);
+     return (size_t)pgsz;
+ }
 diff -u -r libmill-1.2-orig/utils.h libmill-1.2/utils.h
 --- libmill-1.2-orig/utils.h	2015-12-05 11:46:22.935242900 -0800
 +++ libmill-1.2/utils.h	2015-12-05 11:51:20.047750400 -0800
