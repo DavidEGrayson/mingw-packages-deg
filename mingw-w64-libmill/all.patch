@@ -34,13 +34,15 @@ diff -u -r libmill-1.2-orig/debug.c libmill-1.2/debug.c
      fprintf(stderr, "==> %s.%06d ", buf, (int)nw.tv_usec);
 diff -u -r libmill-1.2-orig/ip.c libmill-1.2/ip.c
 --- libmill-1.2-orig/ip.c	2015-12-05 11:46:22.919615000 -0800
-+++ libmill-1.2/ip.c	2015-12-05 12:18:10.961438900 -0800
-@@ -28,13 +28,18 @@
++++ libmill-1.2/ip.c	2015-12-05 12:30:42.560183500 -0800
+@@ -28,13 +28,20 @@
  #include <sys/eventfd.h>
  #endif
  
 +#if defined _WIN32
 +#include <winsock2.h>
++#include <ws2ipdef.h>
++#include <ws2tcpip.h>
 +#else
  #include <arpa/inet.h>
 -#include <errno.h>
@@ -57,6 +59,15 @@ diff -u -r libmill-1.2-orig/ip.c libmill-1.2/ip.c
  #include <ifaddrs.h>
  #endif
  #include <unistd.h>
+@@ -165,7 +172,7 @@
+     if(!name)
+         return mill_ipany(port, mode);
+     ipaddr addr = mill_ipliteral(name, port, mode);
+-#if defined __sun
++#if defined __sun || defined _WIN32
+     return addr;
+ #else
+     if(errno == 0)
 diff -u -r libmill-1.2-orig/utils.h libmill-1.2/utils.h
 --- libmill-1.2-orig/utils.h	2015-12-05 11:46:22.935242900 -0800
 +++ libmill-1.2/utils.h	2015-12-05 11:51:20.047750400 -0800
