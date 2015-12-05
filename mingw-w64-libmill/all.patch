@@ -32,6 +32,31 @@ diff -u -r libmill-1.2-orig/debug.c libmill-1.2/debug.c
      snprintf(buf, sizeof buf, "%02d:%02d:%02d",
          (int)nwtm->tm_hour, (int)nwtm->tm_min, (int)nwtm->tm_sec);
      fprintf(stderr, "==> %s.%06d ", buf, (int)nw.tv_usec);
+diff -u -r libmill-1.2-orig/ip.c libmill-1.2/ip.c
+--- libmill-1.2-orig/ip.c	2015-12-05 11:46:22.919615000 -0800
++++ libmill-1.2/ip.c	2015-12-05 12:18:10.961438900 -0800
+@@ -28,13 +28,18 @@
+ #include <sys/eventfd.h>
+ #endif
+ 
++#if defined _WIN32
++#include <winsock2.h>
++#else
+ #include <arpa/inet.h>
+-#include <errno.h>
+ #include <netinet/in.h>
++#include <sys/socket.h>
++#endif
++
++#include <errno.h>
+ #include <string.h>
+ #include <sys/types.h>
+-#include <sys/socket.h>
+-#if !defined __sun
++#if !defined __sun && !defined _WIN32
+ #include <ifaddrs.h>
+ #endif
+ #include <unistd.h>
 diff -u -r libmill-1.2-orig/utils.h libmill-1.2/utils.h
 --- libmill-1.2-orig/utils.h	2015-12-05 11:46:22.935242900 -0800
 +++ libmill-1.2/utils.h	2015-12-05 11:51:20.047750400 -0800
