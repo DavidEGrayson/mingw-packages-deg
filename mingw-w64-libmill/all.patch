@@ -111,6 +111,34 @@ diff -u -r libmill-1.2-orig/stack.c libmill-1.2/stack.c
      mill_assert(pgsz > 0);
      return (size_t)pgsz;
  }
+diff -u -r libmill-1.2-orig/tcp.c libmill-1.2/tcp.c
+--- libmill-1.2-orig/tcp.c	2015-12-05 11:46:22.935242900 -0800
++++ libmill-1.2/tcp.c	2015-12-05 12:47:56.044621000 -0800
+@@ -22,15 +22,22 @@
+ 
+ */
+ 
++#if defined _WIN32
++#include <winsock2.h>
++#include <ws2ipdef.h>
++#include <ws2tcpip.h>
++#else
+ #include <arpa/inet.h>
++#include <netinet/in.h>
++#include <sys/socket.h>
++#endif
++
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <netinet/in.h>
+ #include <stddef.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/types.h>
+-#include <sys/socket.h>
+ #include <unistd.h>
+ 
+ #include "ip.h"
 diff -u -r libmill-1.2-orig/utils.h libmill-1.2/utils.h
 --- libmill-1.2-orig/utils.h	2015-12-05 11:46:22.935242900 -0800
 +++ libmill-1.2/utils.h	2015-12-05 11:51:20.047750400 -0800
