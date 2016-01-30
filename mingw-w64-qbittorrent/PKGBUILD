@@ -1,0 +1,53 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=qbittorrent
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=3.3.1
+pkgrel=1
+pkgdesc='Bittorrent client (mingw-w64)'
+arch=('any')
+url="http://www.qbittorrent.org/"
+license=('GPL2')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+depends=("${MINGW_PACKAGE_PREFIX}-qt5"
+         "${MINGW_PACKAGE_PREFIX}-libtorrent-rasterbar"
+         "${MINGW_PACKAGE_PREFIX}-boost")
+options=('staticlibs' 'strip')
+source=(http://downloads.sourceforge.net/project/qbittorrent/qbittorrent/qbittorrent-${pkgver}/qbittorrent-${pkgver}.tar.xz)
+sha256sums=('dad15a233a69ce13ea75957585af3f9122dbf915291aab0fdbc48a71b8a229d2')
+
+prepare()
+{
+  cd "${srcdir}/${_realname}-${pkgver}"
+
+  # Remove a directory that has 5.4 M of stuff, including some binaries.
+  rm -R dist
+
+  ./bootstrap.sh
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}"
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="${pkgdir}" install
+
+  cd "${srcdir}/${_realname}-${pkgver}"
+  install -D COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}
