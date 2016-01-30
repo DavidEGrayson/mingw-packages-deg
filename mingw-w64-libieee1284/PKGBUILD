@@ -1,0 +1,58 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=libieee1284
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=0.2.11
+pkgrel=1
+pkgdesc=""
+arch=('any')
+license=('?')
+url="https://sourceforge.net/projects/libieee1284/"
+depends=()
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-gcc-fortran"
+             "${MINGW_PACKAGE_PREFIX}-python2")
+options=('staticlibs' 'strip')
+source=("http://downloads.sourceforge.net/project/libieee1284/libieee1284/${pkgver}/libieee1284-${pkgver}.tar.bz2"
+        01-parport-fd-type.patch
+        02-localtime.patch
+        03-python-prefix.patch)
+sha256sums=('7730de107782e5d2b071bdcb5b06a44da74856f00ef4a9be85d1ba4806a38f1a'
+            'ea4c66b31fc9d89eaa2788c7ac67fc75204b36c50a20f65af323e4ebeddd954a'
+            '75c7658710778a737044e0e221452d78dd58cd08cc21d9f49fc3ed260543bfcc'
+            'abdfea0b90b2c9cc8bedcc9aec8cbd4bc96a05f5c314a441e81982f08b0964f5')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -p1 -i ../01-parport-fd-type.patch
+  patch -p1 -i ../02-localtime.patch
+  patch -p1 -i ../03-python-prefix.patch
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}" \
+    --enable-static \
+    --enable-shared
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make install DESTDIR="${pkgdir}"
+}

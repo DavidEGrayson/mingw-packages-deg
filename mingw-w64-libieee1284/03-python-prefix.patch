@@ -1,0 +1,21 @@
+Use the right Python headers.
+--- libieee1284-0.2.11-orig/Makefile.in
++++ libieee1284-0.2.11/Makefile.in
+@@ -19,6 +19,7 @@
+ 
+ 
+ 
++prefix = @prefix@
+ srcdir = @srcdir@
+ top_srcdir = @top_srcdir@
+ VPATH = @srcdir@
+@@ -273,7 +274,7 @@
+ @PYTHON_TRUE@pyexec_LTLIBRARIES = src/ieee1284module.la
+ @PYTHON_TRUE@src_ieee1284module_la_LDFLAGS = -module -avoid-version
+ @PYTHON_TRUE@src_ieee1284module_la_LIBADD = libieee1284.la
+-@PYTHON_TRUE@src_ieee1284module_la_CFLAGS = -I/usr/include/python$(PYTHON_VERSION) -fpic
++@PYTHON_TRUE@src_ieee1284module_la_CFLAGS = -I$(PYTHON_PREFIX)/include/python$(PYTHON_VERSION) -fpic
+ man3_MANS = doc/libieee1284.3 \
+ 	doc/parport.3 \
+ 	doc/parport_list.3 \
+Only in libieee1284-0.2.11/src: debug.c.rej

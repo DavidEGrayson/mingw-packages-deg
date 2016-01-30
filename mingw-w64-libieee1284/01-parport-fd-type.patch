@@ -1,0 +1,35 @@
+Use intptr_t to store a HANDLE because int is not big enough on x86_64.
+
+--- libieee1284-0.2.11-orig/src/access_lpt.c
++++ libieee1284-0.2.11/src/access_lpt.c
+@@ -68,9 +68,9 @@
+   if (flags & ~F1284_EXCL) /* silently ignore F1284_EXCL - dbjh */
+     return E1284_NOTAVAIL;
+ 
+-  port->fd = (int)CreateFile(port->device, GENERIC_READ | GENERIC_WRITE,
++  port->fd = (intptr_t)CreateFile(port->device, GENERIC_READ | GENERIC_WRITE,
+     0, NULL, OPEN_EXISTING, 0, NULL);
+-  if (port->fd == (int)INVALID_HANDLE_VALUE) 
++  if (port->fd == (intptr_t)INVALID_HANDLE_VALUE) 
+   {
+     if (port->device != NULL) 
+       debugprintf("Failed opening %s\n", port->device);
+--- libieee1284-0.2.11-orig/src/detect.h
++++ libieee1284-0.2.11/src/detect.h
+@@ -25,6 +25,7 @@
+ #define _DETECT_H_
+ 
+ #include <stdlib.h>
++#include <stdint.h>
+ #ifndef _MSC_VER
+ #include <sys/time.h>
+ #else
+@@ -132,7 +133,7 @@
+   unsigned long base;
+   unsigned long base_hi;
+   int interrupt;
+-  int fd;
++  intptr_t fd;
+   int opened;
+   int claimed;
+   unsigned char ctr;

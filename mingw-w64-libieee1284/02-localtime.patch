@@ -1,0 +1,23 @@
+This patch fixes a compiler error:
+
+../libieee1284-0.2.11/src/debug.c: In function 'timeofday':
+../libieee1284-0.2.11/src/debug.c:57:34: warning: passing argument 1 of 'localtime' from incompatible pointer type [-Wincompatible-pointer-types]
+       struct tm *tm = localtime (&tod.tv_sec);
+                                  ^
+In file included from D:/msys64/mingw64/x86_64-w64-mingw32/include/sys/time.h:10:0,
+                 from ../libieee1284-0.2.11/src/debug.c:30:
+D:/msys64/mingw64/x86_64-w64-mingw32/include/time.h:209:33: note: expected 'const time_t * {aka const long long int *}' but argument is of type 'long int *'
+
+--- libieee1284-0.2.11-orig/src/debug.c
++++ libieee1284-0.2.11/src/debug.c
+@@ -54,7 +54,9 @@
+   else
+ #endif
+     {
+-      struct tm *tm = localtime (&tod.tv_sec);
++      time_t t;
++      struct tm *tm = localtime (&t);
++      tod.tv_sec = t;
+       char *p = str + strftime (str, 50, "%H:%M:%S.", tm);
+       sprintf (p, "%06ld", tod.tv_usec);
+     }
