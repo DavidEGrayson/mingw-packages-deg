@@ -32,8 +32,9 @@ prepare() {
   patch -p1 -i ../03-python-prefix.patch
   patch -p1 -i ../04-libtool.patch
 
+  cp /usr/bin/libtool ltmain.sh
   aclocal
-  automake
+  automake --add-missing --force-missing
   autoconf
 }
 

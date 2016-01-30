@@ -10,14 +10,10 @@ arch=('any')
 license=('LGPL3+')
 url="https://sigrok.org/wiki/Libserialport"
 depends=()
-makedepends=()
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
 options=('staticlibs' 'strip')
 source=("http://sigrok.org/download/source/libserialport/libserialport-${pkgver}.tar.gz")
 sha256sums=('4a2af9d9c3ff488e92fb75b4ba38b35bcf9b8a66df04773eba2a7bbf1fa7529d')
-
-prepare() {
-  cd "${srcdir}/${_realname}-${pkgver}"
-}
 
 build() {
   rm -rf "${srcdir}/build-${MINGW_CHOST}"
