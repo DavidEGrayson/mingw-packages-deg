@@ -1,0 +1,20 @@
+--- libieee1284-0.2.11-orig/configure.in
++++ libieee1284-0.2.11/configure.in
+@@ -4,6 +4,7 @@
+ AM_INIT_AUTOMAKE([dist-bzip2 subdir-objects 1.6])
+ AC_PREREQ(2.53)
+ AM_CONFIG_HEADER(include/config.h)
++LT_INIT([win32-dll])
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
+--- libieee1284-0.2.11-orig/Makefile.am
++++ libieee1284-0.2.11/Makefile.am
+@@ -10,6 +10,7 @@
+ # It's current:release:age.
+ libieee1284_la_LDFLAGS = -version-info 5:2:2 \
+ 	-export-symbols $(top_srcdir)/libieee1284.sym
++libieee1284_la_LDFLAGS += -no-undefined
+ include_HEADERS = include/ieee1284.h
+ INCLUDES = -I$(top_srcdir)/include
+ 

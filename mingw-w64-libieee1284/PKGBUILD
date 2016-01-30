@@ -17,17 +17,24 @@ options=('staticlibs' 'strip')
 source=("http://downloads.sourceforge.net/project/libieee1284/libieee1284/${pkgver}/libieee1284-${pkgver}.tar.bz2"
         01-parport-fd-type.patch
         02-localtime.patch
-        03-python-prefix.patch)
+        03-python-prefix.patch
+        04-libtool.patch)
 sha256sums=('7730de107782e5d2b071bdcb5b06a44da74856f00ef4a9be85d1ba4806a38f1a'
             'ea4c66b31fc9d89eaa2788c7ac67fc75204b36c50a20f65af323e4ebeddd954a'
             '75c7658710778a737044e0e221452d78dd58cd08cc21d9f49fc3ed260543bfcc'
-            'abdfea0b90b2c9cc8bedcc9aec8cbd4bc96a05f5c314a441e81982f08b0964f5')
+            'ee897dc0a30931bd4b7f6d5c4151f4ce9bd1f8cfb0798f2eb17981f04a1fa910'
+            '9612ccce3a57c1058d30b24bf590b33bf1e3d3751df79085ea00d7c17f563132')
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}"
   patch -p1 -i ../01-parport-fd-type.patch
   patch -p1 -i ../02-localtime.patch
   patch -p1 -i ../03-python-prefix.patch
+  patch -p1 -i ../04-libtool.patch
+
+  aclocal
+  automake
+  autoconf
 }
 
 build() {
