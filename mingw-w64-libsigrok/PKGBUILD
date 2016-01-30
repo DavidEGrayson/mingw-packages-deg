@@ -1,0 +1,61 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=libsigrok
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=0.4.0
+pkgrel=1
+pkgdesc="A library for talking to hardware logic analyzers, oscilloscopes, multimeters, and more (mingw-w64)"
+arch=('any')
+license=('GPL3')
+url="http://sigrok.org/wiki/Libsigrok"
+depends=("${MINGW_PACKAGE_PREFIX}-glib2"
+         "${MINGW_PACKAGE_PREFIX}-libzip"
+         "${MINGW_PACKAGE_PREFIX}-libserialport"
+         "${MINGW_PACKAGE_PERFIX}-libusb"
+         "${MINGW_PACKAGE_PREFIX}-libftdi"
+         "${MINGW_PACKAGE_PREFIX}-libgpib"
+         "${MINGW_PACKAGE_PREFIX}-libieee1284"
+         "${MINGW_PACKAGE_PREFIX}-check"
+         "${MINGW_PACKAGE_PREFIX}-glibmm"
+)
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-python3"
+  "${MINGW_PACKAGE_PREFIX}-python3-setuptools"
+  "${MINGW_PACKAGE_PREFIX}-python3-numpy"
+  "${MINGW_PACKAGE_PREFIX}-swig"
+  "${MINGW_PACKAGE_PREFIX}-ruby"
+)
+options=('staticlibs' 'strip')
+source=("http://sigrok.org/download/source/libsigrok/libsigrok-${pkgver}.tar.gz")
+sha256sums=('5f291f3fee36e6dab1336f1c78596e50588831bc5ebd7cddc2a95fe8c71d669e')
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -p1 -i ../all.patch
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}"
+
+  make
+}
+
+check() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make check
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  install -Dm644 COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make install DESTDIR="${pkgdir}"
+}
