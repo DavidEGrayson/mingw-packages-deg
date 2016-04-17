@@ -31,7 +31,7 @@ sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2'
 
 prepare() {
   cd "${_realname}-${pkgver}"
-  "../gnulib-${_gnulib_ver:0:7}/gnulib-tool" --import argp fts
+  "../gnulib-${_gnulib_ver:0:7}/gnulib-tool" --import argp fts fstatat progname
   patch -p1 -i ../01-gnulib.patch
   patch -p1 -i ../02-uid.patch
   patch -p1 -i ../03-fts.patch
