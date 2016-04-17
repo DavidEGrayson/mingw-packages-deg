@@ -1,0 +1,23 @@
+diff -ur ucg-0.2.2-orig/configure.ac ucg-0.2.2/configure.ac
+--- ucg-0.2.2-orig/configure.ac	2016-04-16 22:26:13.015730700 -0700
++++ ucg-0.2.2/configure.ac	2016-04-16 22:35:39.218951100 -0700
+@@ -174,6 +174,8 @@
+ 
+ AC_CHECK_FUNCS([getpwuid getuid])
+ 
++AC_CHECK_FUNCS([malloc_stats])
++
+ #AC_LANG_PUSH([C++])
+ # At least gcc 4.8.x claims to support C++11, but its std::regex library is mostly stubbed in.
+ # Attempt to detect this.  On gcc 4.8.x, std::regex_iterator<> is not defined, which we use anyway, so we'll use that
+diff -ur ucg-0.2.2-orig/src/MemDiags.cpp ucg-0.2.2/src/MemDiags.cpp
+--- ucg-0.2.2-orig/src/MemDiags.cpp	2016-04-16 21:42:36.274102600 -0700
++++ ucg-0.2.2/src/MemDiags.cpp	2016-04-16 22:34:30.721510300 -0700
+@@ -28,5 +28,7 @@
+ 
+ void MemDiags::PrintStats() const
+ {
++#ifdef HAVE_MALLOC_STATS
+ 	malloc_stats();
++#endif
+ }
