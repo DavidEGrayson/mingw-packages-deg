@@ -12,12 +12,19 @@ license=('GPL3')
 makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
 depends=("${MINGW_PACKAGE_PREFIX}-pcre")
 options=('staticlibs' 'strip')
-source=("https://github.com/gvansickle/ucg/archive/${pkgver}.tar.gz")
+_gnulib_ver=730c5249cc17a4ebb7afcb3f2f4e73664eeff5ce
+source=("https://github.com/gvansickle/ucg/archive/${pkgver}.tar.gz"
+        "gnulib.tar.gz::http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=snapshot;h=${_gnulib_ver};sf=tgz"
+        "01-gnulib.patch")
 
-sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2')
+sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2'
+            '0f5ab2134a42b233d2d7dbb5296a4c7a0fd6fda4a54381c58cbda1be2519ecbb'
+            '004d0fcaafa330c58f1902abac88099a50b05169aefe4d61f447aa5626a8a712')
 
 prepare() {
   cd "${_realname}-${pkgver}"
+  "../gnulib-${_gnulib_ver:0:7}/gnulib-tool" --import argp
+  patch -p1 -i ../01-gnulib.patch
   autoreconf -i
 }
 
