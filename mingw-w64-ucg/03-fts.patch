@@ -1,0 +1,12 @@
+diff -ur ucg-0.2.2-orig/src/Globber.cpp ucg-0.2.2/src/Globber.cpp
+--- ucg-0.2.2-orig/src/Globber.cpp	2016-04-16 21:42:36.268266700 -0700
++++ ucg-0.2.2/src/Globber.cpp	2016-04-16 22:26:02.728676600 -0700
+@@ -22,7 +22,7 @@
+ #include "TypeManager.h"
+ #include "DirInclusionManager.h"
+ 
+-#include <fts.h>
++#include <fts_.h>
+ #include <dirent.h>
+ #include <fcntl.h>
+ #include <unistd.h>
