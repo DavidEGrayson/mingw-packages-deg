@@ -1,0 +1,77 @@
+diff -ur ucg-0.2.2-orig/configure.ac ucg-0.2.2/configure.ac
+--- ucg-0.2.2-orig/configure.ac	2016-04-16 22:49:05.977945400 -0700
++++ ucg-0.2.2/configure.ac	2016-04-16 22:51:27.915086200 -0700
+@@ -126,8 +126,8 @@
+ ### Checks for header files.
+ ###
+ 
+-# We don't have this header on MinGW.
+-AC_CHECK_HEADERS([pwd.h],[],[],[])
++# We don't have these headers on MinGW.
++AC_CHECK_HEADERS([pwd.h sys/mman.h],[],[],[])
+ 
+ 
+ ###
+diff -ur ucg-0.2.2-orig/src/File.cpp ucg-0.2.2/src/File.cpp
+--- ucg-0.2.2-orig/src/File.cpp	2016-04-16 21:42:35.969605300 -0700
++++ ucg-0.2.2/src/File.cpp	2016-04-16 23:19:23.861811500 -0700
+@@ -25,7 +25,10 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <sys/stat.h>
++
++#ifdef HAVE_SYS_MMAN_H
+ #include <sys/mman.h>
++#endif
+ 
+ File::File(const std::string &filename)
+ {
+@@ -77,12 +80,14 @@
+ 	m_file_data = GetFileData(m_file_descriptor, m_file_size);
+ 	m_file_descriptor = -1;
+ 
+-	if(m_file_data == MAP_FAILED)
++#ifdef HAVE_SYS_MMAN_H
++	if(m_file_data == MAP_FAILED || m_file_data == nullptr)
+ 	{
+ 		// Mapping failed.
+ 		std::cerr << "ERROR: Couldn't map file \"" << filename << "\"" << std::endl;
+ 		throw std::system_error(errno, std::system_category());
+ 	}
++#endif
+ }
+ 
+ File::~File()
+@@ -93,8 +98,9 @@
+ 
+ const char* File::GetFileData(int file_descriptor, size_t file_size)
+ {
+-	const char *file_data = static_cast<const char *>(MAP_FAILED);
++	const char *file_data = nullptr;
+ 
++#ifdef HAVE_SYS_MMAN_H
+ 	if(m_use_mmap)
+ 	{
+ 		file_data = static_cast<const char *>(mmap(NULL, file_size, PROT_READ, MAP_PRIVATE | MAP_NORESERVE, file_descriptor, 0));
+@@ -111,6 +117,7 @@
+ 
+ 	}
+ 	else
++#endif
+ 	{
+ 		file_data = new char [file_size];
+ 
+@@ -126,11 +133,13 @@
+ 
+ void File::FreeFileData(const char* file_data, size_t file_size)
+ {
++#ifdef HAVE_SYS_MMAN_H
+ 	if(m_use_mmap)
+ 	{
+ 		munmap(const_cast<char*>(file_data), file_size);
+ 	}
+ 	else
++#endif
+ 	{
+ 		delete [] file_data;
+ 	}

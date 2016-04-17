@@ -35,7 +35,7 @@ diff -ur ucg-0.2.2-orig/Makefile.am ucg-0.2.2/Makefile.am
  # Note: The code in src depends on the libraries in third_party, so make sure the latter is always listed before the former.
  # Note that we can't list these other libraries in e.g. *_DEPENDENCIES because that replaces all Automake-generated dependencies.
 -SUBDIRS = third_party src . tests
-+SUBDIRS = third_party lib src . tests
++SUBDIRS = third_party src lib . tests
  
  # Make sure README.rd and other docs get distributed and installed correctly.
  dist_doc_DATA = README.md NEWS.md COPYING AUTHORS
@@ -66,3 +66,12 @@ diff -ur ucg-0.2.2-orig/src/Makefile.am ucg-0.2.2/src/Makefile.am
 +libsrc_a_CPPFLAGS = $(AM_CPPFLAGS) -I $(top_srcdir)/lib
  libsrc_a_CFLAGS = $(AM_CFLAGS)
  libsrc_a_CXXFLAGS = $(AM_CXXFLAGS)
+--- ucg-0.2.2-orig/Makefile.am	2016-04-16 22:08:29.036557000 -0700
++++ ucg-0.2.2/Makefile.am	2016-04-16 23:30:02.562985000 -0700
+@@ -76,5 +76,5 @@
+ ucg_CFLAGS = $(AM_CFLAGS)
+ ucg_CXXFLAGS = $(AM_CXXFLAGS)
+ ucg_LDFLAGS = $(AM_LDFLAGS)
+-ucg_LDADD = ./src/libsrc.a
++ucg_LDADD = ./src/libsrc.a ./lib/libgnu.a
+ 
