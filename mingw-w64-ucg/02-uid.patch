@@ -1,0 +1,29 @@
+diff -ur ucg-0.2.2-orig/configure.ac ucg-0.2.2/configure.ac
+--- ucg-0.2.2-orig/configure.ac	2016-04-16 22:08:29.032553900 -0700
++++ ucg-0.2.2/configure.ac	2016-04-16 22:08:42.825826500 -0700
+@@ -172,6 +172,8 @@
+ 
+ AC_CHECK_FUNCS([get_current_dir_name])
+ 
++AC_CHECK_FUNCS([getpwuid getuid])
++
+ #AC_LANG_PUSH([C++])
+ # At least gcc 4.8.x claims to support C++11, but its std::regex library is mostly stubbed in.
+ # Attempt to detect this.  On gcc 4.8.x, std::regex_iterator<> is not defined, which we use anyway, so we'll use that
+diff -ur ucg-0.2.2-orig/src/ArgParse.cpp ucg-0.2.2/src/ArgParse.cpp
+--- ucg-0.2.2-orig/src/ArgParse.cpp	2016-04-16 21:42:35.711879900 -0700
++++ ucg-0.2.2/src/ArgParse.cpp	2016-04-16 22:10:25.261942400 -0700
+@@ -579,11 +579,13 @@
+ 	// First try the $HOME environment variable.
+ 	const char * home_path = getenv("HOME");
+ 
++#if defined(HAVE_GETUID) && defined(HAVE_GETPWUID)
+ 	if(home_path == nullptr)
+ 	{
+ 		// No HOME variable, check the user database.
+ 		home_path = getpwuid(getuid())->pw_dir;
+ 	}
++#endif
+ 
+ 	if(home_path != nullptr)
+ 	{
