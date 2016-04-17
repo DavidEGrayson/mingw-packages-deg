@@ -1,0 +1,43 @@
+# Maintainer: David Grayson <davidegrayson@gmail.com>
+
+_realname=ucg
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.2.2
+pkgrel=2
+pkgdesc='Fast grep-like tool for searching large bodies of source code (mingw-w64)'
+arch=('any')
+url="https://gvansickle.github.io/ucg/"
+license=('GPL3')
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+depends=("${MINGW_PACKAGE_PREFIX}-pcre")
+options=('staticlibs' 'strip')
+source=("https://github.com/gvansickle/ucg/archive/${pkgver}.tar.gz")
+
+sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2')
+
+prepare() {
+  cd "${_realname}-${pkgver}"
+  autoreconf -i
+}
+
+build() {
+  rm -rf "${srcdir}/build-${MINGW_CHOST}"
+  mkdir -p "${srcdir}/build-${MINGW_CHOST}"
+  cd "${srcdir}/build-${MINGW_CHOST}"
+
+  "../${_realname}-${pkgver}/configure" \
+    --prefix="${MINGW_PREFIX}" \
+    --build="${MINGW_CHOST}" \
+    --host="${MINGW_CHOST}"
+
+  make
+}
+
+package() {
+  cd "${srcdir}/build-${MINGW_CHOST}"
+  make DESTDIR="${pkgdir}" install
+
+  cd "${srcdir}/${_realname}-${pkgver}"
+  install -D COPYING "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+}
