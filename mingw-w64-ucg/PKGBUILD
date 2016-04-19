@@ -19,7 +19,8 @@ source=("https://github.com/gvansickle/ucg/archive/${pkgver}.tar.gz"
         "02-uid.patch"
         "03-fts.patch"
         "04-malloc-stats.patch"
-        "05-mmap.patch")
+        "05-mmap.patch"
+        "06-gnulib-fts-cycle.patch")
 
 sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2'
             '0f5ab2134a42b233d2d7dbb5296a4c7a0fd6fda4a54381c58cbda1be2519ecbb'
@@ -27,7 +28,8 @@ sha256sums=('597527d3e8902b8ab936f04a11c8b5d93c33e372638bd63d08c8013fec9a95d2'
             'b867482b0e72fed4ebef8265c09203ec62c74c473aab386d5905f51b74b9f5de'
             '42640c270ad538064f4ee07947747188d7f9d9bcde1b7fa81b9ddb31bbb0613c'
             'caf2961d830f340bd69ea643d2691d0d63a96fac91b00e23360fcfba5578b3e5'
-            '12d60d83699b0609601b63dc030cc5c3334d783c4b4ffdd37d36509e8a32eeb1')
+            '12d60d83699b0609601b63dc030cc5c3334d783c4b4ffdd37d36509e8a32eeb1'
+            'bc4062601509ba45a93a498ae9e9ae37ce920f0084a9ad37c28f6b633420ff07')
 
 prepare() {
   cd "${_realname}-${pkgver}"
@@ -37,6 +39,7 @@ prepare() {
   patch -p1 -i ../03-fts.patch
   patch -p1 -i ../04-malloc-stats.patch
   patch -p1 -i ../05-mmap.patch
+  patch -p1 -i ../06-gnulib-fts-cycle.patch
   autoreconf -i
 }
 
@@ -52,6 +55,8 @@ build() {
 
   make
 }
+
+# TODO: make check
 
 package() {
   cd "${srcdir}/build-${MINGW_CHOST}"

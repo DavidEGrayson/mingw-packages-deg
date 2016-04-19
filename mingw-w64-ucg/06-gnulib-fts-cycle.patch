@@ -1,0 +1,23 @@
+--- orig/lib/fts-cycle.c
++++ new/lib/fts-cycle.c
+@@ -73,6 +73,12 @@
+ static bool
+ enter_dir (FTS *fts, FTSENT *ent)
+ {
++  if (ent->fts_statp->st_ino == 0) {
++      // st_ino is probably a dummy value and cannot be used
++      // to find cycles.
++      return true;
++  }
++
+   if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
+     {
+       struct stat const *st = ent->fts_statp;
+@@ -125,6 +131,7 @@
+ leave_dir (FTS *fts, FTSENT *ent)
+ {
+   struct stat const *st = ent->fts_statp;
++  if (st->st_ino == 0) { return; }
+   if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
+     {
+       struct Active_dir obj;
