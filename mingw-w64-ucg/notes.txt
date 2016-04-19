@@ -1,0 +1,1 @@
+AT_CHECK([script -qfc "winpty ucg --noenv --cpp --nocolor --column 'do_something'" /dev/null | sed 's/\x1B\@<:@@<:@0-9;?@:>@*@<:@a-zA-Z@:>@//g' | tee ../../../tmphax0.txt | sed 's/\r//g' | tee ../../../tmphax2.txt],[0],
