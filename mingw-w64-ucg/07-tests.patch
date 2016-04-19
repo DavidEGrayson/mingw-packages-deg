@@ -1,0 +1,19 @@
+--- ucg-0.2.2/tests/sanity.at
++++ ucg-0.2.2-orig/tests/sanity.at
+@@ -23,7 +23,15 @@
+ 
+ # Note that the stdout match text here has a literal '\n' in it due to the line break; don't try
+ # to put this on one line.
+-AT_CHECK([ucg 'a' /thisDirDoesntExist], [1], [ucg: "/thisDirDoesntExist": No such file or directory
++dir_name_in_error="/thisDirDoesntExist"
++# NOTE: We shouldn't use this clunky way of detecting MinGW; see the advice about atlocal here:
++# https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/testsuite-Scripts.html
++if test -n "$MSYSTEM"; then
++  if @<:@@<:@ $(gcc -dumpmachine) == *mingw32 @:>@@:>@; then
++    dir_name_in_error=$(cygpath -m /thisDirDoesntExist)
++  fi
++fi
++AT_CHECK([ucg 'a' /thisDirDoesntExist], [1], [ucg: "@S|@dir_name_in_error": No such file or directory
+ ], [stderr])
+ 
+ AT_CLEANUP
