@@ -1,5 +1,5 @@
---- ucg-0.2.2/tests/sanity.at
-+++ ucg-0.2.2-orig/tests/sanity.at
+--- ucg-0.2.2-orig/tests/sanity.at
++++ ucg-0.2.2/tests/sanity.at
 @@ -23,7 +23,15 @@
  
  # Note that the stdout match text here has a literal '\n' in it due to the line break; don't try
@@ -17,3 +17,12 @@
  ], [stderr])
  
  AT_CLEANUP
+@@ -34,7 +42,7 @@
+ ###
+ AT_SETUP([Error code with bad regex])
+ 
+-AT_CHECK([ucg '*'], [255], [stdout], [stderr])
++AT_CHECK([ucg '*xyz'], [255], [stdout], [stderr])
+ 
+ AT_CLEANUP
+ 
